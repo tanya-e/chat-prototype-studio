@@ -4,13 +4,11 @@ import { SmallHumanAvatar } from "../icons/MessengerIcons";
 
 interface SystemMessageProps {
   message: string;
-  timestamp?: Date;
   type?: "human-joined" | "default";
 }
 
 const SystemMessage: React.FC<SystemMessageProps> = ({ 
   message, 
-  timestamp,
   type = "default" 
 }) => {
   // Extract name from message if it's a human-joined type
@@ -29,9 +27,9 @@ const SystemMessage: React.FC<SystemMessageProps> = ({
   return (
     <div className="flex justify-center my-4 animate-fade-in">
       {isHumanJoined ? (
-        <div className="flex items-center gap-1.5 py-2 px-6">
+        <div className="flex items-center gap-1.5 py-6 px-6">
           <SmallHumanAvatar />
-          <div className="text-xs">
+          <div className="text-xs flex">
             <span 
               style={{
                 color: 'var(--messenger-text-default)',
