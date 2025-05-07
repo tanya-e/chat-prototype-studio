@@ -85,7 +85,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
                   type="submit"
                   className="flex items-center justify-center w-8 h-8 rounded-full bg-messenger-customer-bg"
                 >
-                  <Send size={16} className="text-white" />
+                  <Send size={16} className="text-messenger-customer-text" />
                 </button>
               )}
             </div>
