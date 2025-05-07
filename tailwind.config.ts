@@ -105,12 +105,17 @@ export default {
           '0%': { opacity: '0.2' },
           '20%': { opacity: '1' },
           '100%': { opacity: '0.2' }
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' }
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'pulse-dots': 'pulse-dots 1.4s infinite ease-in-out'
+        'pulse-dots': 'pulse-dots 1.4s infinite ease-in-out',
+        'fade-in': 'fade-in 0.3s ease-in-out'
       }
     }
   },
