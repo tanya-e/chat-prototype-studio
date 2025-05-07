@@ -15,7 +15,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [hasText, setHasText] = useState(false);
-  const [animationState, setAnimationState] = useState("initial");
+  const [brandingVisible, setBrandingVisible] = useState(true);
 
   useEffect(() => {
     // Track when the composer is displayed
@@ -25,10 +25,9 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
   // Handle animation state when branding disappears
   useEffect(() => {
     if (shouldAnimate) {
-      setAnimationState("transitioning");
-      // Match the duration of the branding fade-out
+      // Small delay to match the branding fade-out timing
       const animationTimer = setTimeout(() => {
-        setAnimationState("completed");
+        setBrandingVisible(false);
       }, 300);
       return () => clearTimeout(animationTimer);
     }
@@ -78,8 +77,9 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
       className="sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border"
       style={{
         paddingTop: "3px",
-        paddingBottom: animationState === "completed" ? "15px" : "3px",
-        transition: "padding-bottom 300ms ease-out",
+        // Smooth transition for padding-bottom
+        paddingBottom: brandingVisible ? "3px" : "15px",
+        transition: "padding-bottom 400ms ease-out"
       }}
     >
       <form onSubmit={handleSubmit} className="flex items-center">
