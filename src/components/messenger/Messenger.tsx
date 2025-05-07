@@ -304,11 +304,11 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
     setLoadingType("toMessages");
     setIsLoading(true);
     
-    // Simulate loading time
+    // Simulate loading time with increased delay (at least 2 seconds)
     setTimeout(() => {
       setIsLoading(false);
       setActiveConversation(null);
-    }, 500); // 500ms delay
+    }, 2000); // 2 seconds delay
   };
 
   const interleavedMessages = getInterleavedMessages();

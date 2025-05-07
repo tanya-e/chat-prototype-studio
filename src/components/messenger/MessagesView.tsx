@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useConversations } from "../../context/ConversationsContext";
 import { AIAvatar, HumanAvatar } from "../icons/MessengerIcons";
@@ -46,22 +45,22 @@ const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
     setIsLoading(true);
     setSelectedConversationId(newConversationId);
     
-    // Simulate loading time
+    // Simulate loading time with increased delay (at least 2 seconds)
     setTimeout(() => {
       setIsLoading(false);
       setActiveConversation(newConversationId);
-    }, 500); // 500ms delay
+    }, 2000);
   };
 
   const handleSelectConversation = (conversationId: string) => {
     setIsLoading(true);
     setSelectedConversationId(conversationId);
     
-    // Simulate loading time
+    // Simulate loading time with increased delay (at least 2 seconds)
     setTimeout(() => {
       setIsLoading(false);
       setActiveConversation(conversationId);
-    }, 500); // 500ms delay
+    }, 2000);
   };
 
   const formatTimestamp = (timestamp: Date) => {
