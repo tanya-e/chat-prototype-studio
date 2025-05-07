@@ -1,7 +1,18 @@
 
-import React from "react";
+import React, { useEffect } from "react";
+import { trackEvent } from "@/utils/analytics";
 
 const PoweredByBranding: React.FC = () => {
+  useEffect(() => {
+    // Track when the branding is displayed
+    trackEvent("branding_displayed", { component: "PoweredByFin" });
+  }, []);
+  
+  const handleClick = () => {
+    // Track when the branding is clicked
+    trackEvent("branding_clicked", { component: "PoweredByFin" });
+  };
+
   return (
     <div 
       className="w-full flex justify-center items-center"
@@ -10,6 +21,8 @@ const PoweredByBranding: React.FC = () => {
       }}
     >
       <span
+        onClick={handleClick}
+        className="cursor-pointer"
         style={{
           color: "var(--messenger-text-muted-extra)",
           fontSize: "12px",
