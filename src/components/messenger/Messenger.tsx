@@ -98,16 +98,13 @@ const Messenger: React.FC = () => {
     
     // Add system message for connecting
     setTimeout(() => {
-      // We no longer add this as a message group, but as a system message
-      // that will be rendered separately
-      
       // Simulate agent joining after a delay
       setTimeout(() => {
         setHeaderState("human");
         setWaitingForHuman(false);
         
         // Add system message for agent joining
-        // This is also now handled with the SystemMessage component
+        const timestamp = new Date();
         
         // Show agent typing
         setTimeout(() => {
@@ -189,7 +186,11 @@ const Messenger: React.FC = () => {
           ))}
           
           {headerState === "human" && !waitingForHuman && !isTyping && messages.some(g => g.sender === "human") && (
-            <SystemMessage message="Kelly joined the conversation" timestamp={new Date()} />
+            <SystemMessage 
+              message="Kelly joined the conversation" 
+              timestamp={new Date()} 
+              type="human-joined"
+            />
           )}
           
           {isTyping && (
