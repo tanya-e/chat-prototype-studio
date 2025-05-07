@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import Messenger from "../components/messenger/Messenger";
+import MessengerContainer from "../components/messenger/MessengerContainer";
 import { Link } from "react-router-dom";
 
 const BrandingFlowsPrototype: React.FC = () => {
@@ -45,12 +45,15 @@ const BrandingFlowsPrototype: React.FC = () => {
           </div>
           <div className="md:w-2/3">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 h-[95vh] flex items-center justify-center">
-              <div className="w-[400px] h-[95vh] max-h-[550px] rounded-2xl overflow-hidden shadow-lg">
-                <Messenger />
-              </div>
+              <p className="text-center text-gray-600 dark:text-gray-400">
+                Click the messenger launcher in the bottom right corner to open the messenger.
+              </p>
             </div>
           </div>
         </div>
+        
+        {/* Add the MessengerContainer here, which includes the launcher and messenger */}
+        <MessengerContainer />
       </div>
     </div>
   );
