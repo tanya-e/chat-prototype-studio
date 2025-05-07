@@ -17,7 +17,7 @@ const BrandingFlowsPrototype: React.FC = () => {
   return <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${theme === "dark" ? "dark" : ""}`}>
       <div className="container mx-auto py-8">
         <div className="mb-6 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Trigger prototypes</h1>
+          <h1 className="text-2xl font-bold">'Powered by' flows explorations</h1>
           <div className="flex space-x-4">
             <Link to="/" className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
               Back to Home
@@ -26,6 +26,14 @@ const BrandingFlowsPrototype: React.FC = () => {
               Toggle {theme === "light" ? "Dark" : "Light"} Mode
             </button>
           </div>
+        </div>
+        
+        <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h2 className="text-lg font-semibold mb-2">About these flows</h2>
+          <p className="text-gray-700 dark:text-gray-300">
+            "Powered by Fin" appears at the start of the conversation under the composer and disappears after a particular event. 
+            Below are explorations of these different trigger events that control when the branding disappears.
+          </p>
         </div>
         
         <div className="flex flex-col md:flex-row gap-6">
