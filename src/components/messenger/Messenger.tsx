@@ -30,14 +30,30 @@ const Messenger: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [headerState, setHeaderState] = useState<HeaderStateType>("ai");
   const [waitingForHuman, setWaitingForHuman] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { toast } = useToast();
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
+
+  // Track scroll position for handover pill styling
+  useEffect(() => {
+    const messagesContainer = messagesContainerRef.current;
+    if (!messagesContainer) return;
+
+    const handleScroll = () => {
+      const { scrollTop } = messagesContainer;
+      setIsScrolled(scrollTop > 10); // Apply fixed styling after scrolling down a bit
+    };
+
+    messagesContainer.addEventListener("scroll", handleScroll);
+    return () => messagesContainer.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleSendMessage = (text: string) => {
     const newUserMessage: MessageGroupType = {
@@ -164,7 +180,10 @@ const Messenger: React.FC = () => {
       >
         <MessengerHeader headerState={headerState} />
         
-        <div className="flex-1 overflow-y-auto p-4">
+        <div 
+          ref={messagesContainerRef} 
+          className="flex-1 overflow-y-auto p-4"
+        >
           {messages.map((group) => (
             <MessageGroup key={group.id} group={group} />
           ))}
@@ -184,7 +203,7 @@ const Messenger: React.FC = () => {
         
         {waitingForHuman && (
           <div className="flex justify-center mb-4 mt-auto px-4">
-            <TeamHandover />
+            <TeamHandover variant={isScrolled ? "fixed" : "default"} />
           </div>
         )}
         

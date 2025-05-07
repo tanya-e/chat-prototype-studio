@@ -3,18 +3,23 @@ import React from "react";
 
 interface TeamHandoverProps {
   message?: string;
+  variant?: "fixed" | "default"; // Add variant prop for the two states
 }
 
 const TeamHandover: React.FC<TeamHandoverProps> = ({ 
-  message = "The team will get back to you." 
+  message = "The team will get back to you.",
+  variant = "default"
 }) => {
   return (
     <div 
-      className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-messenger-base rounded-[20px] animate-fade-in whitespace-nowrap"
+      className={`flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-messenger-base rounded-[20px] animate-fade-in ${
+        variant === "fixed" ? "border border-[rgba(0,0,0,0.05)] shadow-sm" : ""
+      }`}
       style={{ 
-        border: "1px solid rgba(0, 0, 0, 0.05)",
-        boxShadow: "0px 1px 2px 0px rgba(15, 15, 15, 0.06)",
-        width: "272px"
+        width: "272px",
+        ...(variant === "fixed" ? {
+          boxShadow: "0px 1px 2px 0px rgba(15, 15, 15, 0.06)"
+        } : {})
       }}
     >
       <div 
@@ -27,7 +32,7 @@ const TeamHandover: React.FC<TeamHandoverProps> = ({
           <div className="w-6 h-6 rounded-full border-2 border-messenger-base bg-gray-100 z-10"></div>
         </div>
       </div>
-      <span className="text-messenger-text-muted text-sm leading-[150%] truncate">
+      <span className="text-messenger-text-muted text-sm leading-[150%]">
         {message}
       </span>
     </div>
