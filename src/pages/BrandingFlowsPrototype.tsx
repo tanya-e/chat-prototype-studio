@@ -41,7 +41,7 @@ const BrandingFlowsPrototype: React.FC = () => {
             <FlowsList selectedFlow={selectedFlow} onFlowSelect={handleFlowChange} />
           </div>
           <div className="md:w-2/3">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 h-[600px] flex items-center justify-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 h-[95vh] flex items-center justify-center">
               <div className="w-[400px] h-[95vh] max-h-[550px] rounded-2xl overflow-hidden shadow-lg">
                 <MessengerPreview key={selectedFlow} flowType={selectedFlow} />
               </div>
