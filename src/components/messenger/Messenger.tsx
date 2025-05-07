@@ -29,6 +29,7 @@ interface SystemMessageGroup {
   id: string;
   type: "system";
   content: string;
+  displayed: boolean; // Add a flag to track if message has been displayed
 }
 
 const Messenger: React.FC = () => {
@@ -104,49 +105,48 @@ const Messenger: React.FC = () => {
     setHeaderState("unassigned");
     setWaitingForHuman(true);
     
-    // Add system message for connecting
+    // First add the system message for Kelly joining
+    const systemMessageId = `system-${Date.now()}`;
+    setSystemMessages([
+      {
+        id: systemMessageId,
+        type: "system",
+        content: "Kelly joined the conversation",
+        displayed: false
+      }
+    ]);
+    
+    // Wait a small delay before showing the human response sequence
     setTimeout(() => {
-      // Simulate agent joining after a delay
+      // Update header state to human
+      setHeaderState("human");
+      setWaitingForHuman(false);
+      
+      // Show typing indicator
       setTimeout(() => {
-        setHeaderState("human");
-        setWaitingForHuman(false);
+        setIsTyping(true);
         
-        // First show the system message that Kelly joined
-        setSystemMessages((prev) => [
-          ...prev,
-          {
-            id: `system-${Date.now()}`,
-            type: "system",
-            content: "Kelly joined the conversation"
-          }
-        ]);
-        
-        // Then show agent typing
+        // Finally show first message from agent
         setTimeout(() => {
-          setIsTyping(true);
-          
-          // Finally show first message from agent
-          setTimeout(() => {
-            setIsTyping(false);
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: `agent-${Date.now()}`,
-                sender: "human",
-                showAvatar: true,
-                messages: [
-                  {
-                    id: `agent-msg-${Date.now()}`,
-                    content: "Hi there! I'm Kelly. What can I help you with today?",
-                    timestamp: new Date(),
-                  },
-                ],
-              },
-            ]);
-          }, 2000);
-        }, 1000);
-      }, 3000);
-    }, 300);
+          setIsTyping(false);
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: `agent-${Date.now()}`,
+              sender: "human",
+              showAvatar: true,
+              messages: [
+                {
+                  id: `agent-msg-${Date.now()}`,
+                  content: "Hi there! I'm Kelly. What can I help you with today?",
+                  timestamp: new Date(),
+                },
+              ],
+            },
+          ]);
+        }, 2000);
+      }, 1000);
+    }, 3000);
   };
 
   const simulateAiResponse = () => {
@@ -178,12 +178,25 @@ const Messenger: React.FC = () => {
     
     // Insert system messages at the right positions based on their timestamps
     systemMessages.forEach(sysMsg => {
-      let insertIndex = result.length;
-      result.splice(insertIndex, 0, {
-        id: sysMsg.id,
-        type: "system-message",
-        content: sysMsg.content
-      } as any);
+      // Find the index where the human agent's first message appears
+      const humanAgentMessageIndex = result.findIndex(
+        msg => msg.sender === "human"
+      );
+      
+      // If there's a human agent message, insert system message before it
+      // Otherwise insert at the end
+      const insertIndex = humanAgentMessageIndex >= 0 
+        ? humanAgentMessageIndex 
+        : result.length;
+        
+      // Insert the system message if not already in the result
+      if (!sysMsg.displayed) {
+        result.splice(insertIndex, 0, {
+          id: sysMsg.id,
+          type: "system-message",
+          content: sysMsg.content
+        } as any);
+      }
     });
     
     return result;

@@ -20,7 +20,7 @@ const SystemMessage: React.FC<SystemMessageProps> = ({
     const parts = message.split(" joined");
     if (parts.length > 1) {
       nameContent = <span className="font-medium">{parts[0]}</span>;
-      messageContent = ` joined${parts[1]}`;
+      messageContent = ` joined${parts[1]}`; // Add space before "joined"
     }
   }
 
