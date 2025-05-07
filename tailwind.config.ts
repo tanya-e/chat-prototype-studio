@@ -76,6 +76,7 @@ export default {
           'ai-text': 'var(--messenger-ai-text)',
           'composer-bg': 'var(--messenger-composer-bg)',
           'composer-border': 'var(--messenger-composer-border)',
+          'input-base': 'var(--messenger-input-base)',
         }
       },
       borderRadius: {

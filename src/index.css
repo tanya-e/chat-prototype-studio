@@ -46,6 +46,7 @@
     --messenger-ai-text: #1C1C1C;
     --messenger-composer-bg: rgba(56, 56, 56, 0.80);
     --messenger-composer-border: #E5E5E5;
+    --messenger-input-base: #FFFFFF; /* Neutral/Container-base for light mode */
 
     --radius: 0.5rem;
   }
@@ -92,6 +93,7 @@
     --messenger-ai-text: #F7F7F7;
     --messenger-composer-bg: rgba(56, 56, 56, 0.80);
     --messenger-composer-border: #3E3E3E;
+    --messenger-input-base: #1C1C1C; /* Neutral/Container for dark mode */
   }
 }
 

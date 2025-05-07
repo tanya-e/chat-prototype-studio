@@ -39,10 +39,10 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
               isActive 
                 ? "border-[1.5px] border-messenger-customer-bg" 
                 : "border border-messenger-composer-border"
-            } bg-white shadow-sm`}
+            } bg-messenger-input-base shadow-sm`}
             style={{
               boxShadow: "0px 0px 4px 0px rgba(15, 15, 15, 0.16)",
-              padding: isActive ? "8px 8px 8px 16px" : "8px 16px"
+              padding: isActive && hasText ? "8px 8px 8px 16px" : isActive ? "8px 16px" : "8px 16px"
             }}
           >
             <input
