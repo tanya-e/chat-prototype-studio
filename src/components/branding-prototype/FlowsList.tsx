@@ -32,21 +32,21 @@ const FlowsList: React.FC<FlowsListProps> = ({ selectedFlow, onFlowSelect }) => 
   ];
 
   return (
-    <div className="bg-card dark:bg-gray-800 border border-border rounded-lg shadow-sm p-5">
-      <h2 className="text-lg mb-4 font-normal text-gray-800 dark:text-gray-200">Branding Flows</h2>
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+      <h2 className="text-lg font-medium mb-4">Branding Disappearance Flows</h2>
       <div className="space-y-2">
         {flows.map((flow) => (
           <button
             key={flow.id}
             onClick={() => onFlowSelect(flow.id)}
-            className={`w-full text-left p-3 rounded-md transition-colors font-mono text-xs uppercase tracking-wider ${
+            className={`w-full text-left p-3 rounded-md transition-colors ${
               selectedFlow === flow.id
-                ? "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-l-2 border-gray-400"
-                : "hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400"
+                ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
+                : "hover:bg-gray-100 dark:hover:bg-gray-700"
             }`}
           >
-            <div className="font-mono">{flow.label}</div>
-            <div className="text-xs normal-case font-sans mt-1 text-gray-500 dark:text-gray-400">{flow.description}</div>
+            <div className="font-medium">{flow.label}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">{flow.description}</div>
           </button>
         ))}
       </div>
