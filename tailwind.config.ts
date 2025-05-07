@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -105,21 +104,25 @@ export default {
         'messenger-open': {
           '0%': { 
             opacity: '0', 
-            transform: 'scale(0.5) translateY(20px)' 
+            transform: 'scale(0.5) translateY(20px)',
+            borderRadius: '1rem'
           },
           '100%': { 
             opacity: '1', 
-            transform: 'scale(1) translateY(0)' 
+            transform: 'scale(1) translateY(0)',
+            borderRadius: '1rem'
           }
         },
         'messenger-close': {
           '0%': { 
             opacity: '1', 
-            transform: 'scale(1) translateY(0)' 
+            transform: 'scale(1) translateY(0)',
+            borderRadius: '1rem' 
           },
           '100%': { 
             opacity: '0', 
-            transform: 'scale(0.5) translateY(20px)' 
+            transform: 'scale(0.5) translateY(20px)',
+            borderRadius: '1rem' 
           }
         }
       },

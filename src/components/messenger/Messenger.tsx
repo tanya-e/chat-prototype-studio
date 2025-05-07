@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -220,7 +221,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose }) => {
   const interleavedMessages = getInterleavedMessages();
 
   return (
-    <div className="flex flex-col h-full bg-messenger-base rounded-2xl overflow-hidden">
+    <div className="flex flex-col h-full bg-messenger-base overflow-hidden">
       <MessengerHeader headerState={headerState} onClose={onClose} />
       
       <div 
