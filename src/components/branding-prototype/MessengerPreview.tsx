@@ -1,0 +1,94 @@
+
+import React, { useState, useEffect, useRef } from "react";
+import MessengerHeader from "../messenger/MessengerHeader";
+import MessageGroup from "../messenger/MessageGroup";
+import TypingIndicator from "../messenger/TypingIndicator";
+import { BrandingFlowType } from "../../types/branding-flows";
+import MessageComposer from "../messenger/MessageComposer";
+import AnimatedBranding from "../messenger/AnimatedBranding";
+
+interface MessengerPreviewProps {
+  flowType: BrandingFlowType;
+}
+
+const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
+  const [isFinMessageVisible, setIsFinMessageVisible] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [userSentMessage, setUserSentMessage] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Simulate staggered loading and initial Fin message
+  useEffect(() => {
+    // Reset state when flow changes
+    setIsFinMessageVisible(false);
+    setIsTyping(false);
+    setUserSentMessage(false);
+
+    // Show typing indicator
+    setTimeout(() => {
+      setIsTyping(true);
+      
+      // Show Fin message after typing
+      setTimeout(() => {
+        setIsTyping(false);
+        setIsFinMessageVisible(true);
+      }, 1000); // 1s typing animation
+    }, 200); // 0.2s delay before typing starts
+  }, [flowType]);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [isFinMessageVisible, isTyping]);
+
+  const handleSendMessage = (text: string) => {
+    // Mark that user has sent a message (for flow types that need it)
+    setUserSentMessage(true);
+  };
+
+  return (
+    <div className="flex flex-col h-full w-full bg-messenger-base overflow-hidden rounded-lg">
+      <MessengerHeader headerState="ai" />
+      
+      <div className="flex-1 overflow-y-auto p-4">
+        {isFinMessageVisible && (
+          <MessageGroup
+            group={{
+              id: "1",
+              sender: "ai",
+              showAvatar: true,
+              messages: [
+                {
+                  id: "1-1",
+                  content: "Hi there, welcome to Intercom 👋 You are now speaking with Fin AI Agent. I can do much more than chatbots you've seen before. Tell me as much as you can about your question and I'll do my best to help you in an instant.",
+                  timestamp: new Date(),
+                },
+              ],
+            }}
+          />
+        )}
+        
+        {isTyping && (
+          <div className="mb-4">
+            <TypingIndicator sender="ai" name="Fin" />
+          </div>
+        )}
+        
+        <div ref={messagesEndRef} />
+      </div>
+      
+      <div className="mt-auto">
+        <div className="relative">
+          <MessageComposer onSendMessage={handleSendMessage} />
+          <AnimatedBranding 
+            flowType={flowType} 
+            onFinReply={isFinMessageVisible}
+            onUserMessage={userSentMessage}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MessengerPreview;

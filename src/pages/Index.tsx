@@ -25,6 +25,9 @@ const Index = () => {
             <Link to="/design-tokens" className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
               View Design Tokens
             </Link>
+            <Link to="/branding-flows" className="px-4 py-2 bg-blue-500 text-white dark:bg-blue-600 rounded-lg">
+              Branding Flows Prototype
+            </Link>
             <button
               onClick={toggleTheme}
               className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg"
