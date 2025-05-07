@@ -128,7 +128,7 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'pulse-dots': 'pulse-dots 1.4s infinite ease-in-out',
         'fade-in': 'fade-in 0.3s ease-in-out',
-        'messenger-open': 'messenger-open 300ms ease-out forwards',
+        'messenger-open': 'messenger-open 300ms ease-in-out forwards',
         'messenger-close': 'messenger-close 300ms ease-out forwards'
       }
     }
