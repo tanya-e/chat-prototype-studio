@@ -31,7 +31,7 @@ const AnimatedBranding: React.FC<AnimatedBrandingProps> = ({
     } else if (flowType === "onUserMessage" && onUserMessage) {
       setIsVisible(false);
     } else if (flowType === "combo") {
-      if (onUserMessage || (onFinReply && setTimeout(() => setIsVisible(false), 4000))) {
+      if (onUserMessage || onFinReply) {
         setIsVisible(false);
       }
     }

@@ -1,6 +1,9 @@
+
 import React, { useState } from "react";
 import MessengerContainer from "../components/messenger/MessengerContainer";
 import { Link } from "react-router-dom";
+import MessengerPreview from "../components/branding-prototype/MessengerPreview";
+
 const BrandingFlowsPrototype: React.FC = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
@@ -8,6 +11,7 @@ const BrandingFlowsPrototype: React.FC = () => {
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
   };
+
   return <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${theme === "dark" ? "dark" : ""}`}>
       <div className="container mx-auto py-8">
         <div className="mb-6 flex justify-between items-center">
@@ -28,14 +32,19 @@ const BrandingFlowsPrototype: React.FC = () => {
               <h2 className="text-lg font-medium mb-4">Branding Flow</h2>
               <div className="space-y-2">
                 <button className="w-full text-left p-3 rounded-md transition-colors bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                  <div className="font-medium">On Fin reply</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">Branding disappears when Fin sends a message</div>
+                  <div className="font-medium">On user first message</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Branding disappears when user sends a message</div>
                 </button>
               </div>
             </div>
           </div>
           <div className="md:w-2/3">
-            
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 h-[700px]">
+              <h2 className="text-lg font-medium mb-4">Preview</h2>
+              <div className="h-[600px] border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                <MessengerPreview flowType="onUserMessage" />
+              </div>
+            </div>
           </div>
         </div>
         
@@ -44,4 +53,5 @@ const BrandingFlowsPrototype: React.FC = () => {
       </div>
     </div>;
 };
+
 export default BrandingFlowsPrototype;

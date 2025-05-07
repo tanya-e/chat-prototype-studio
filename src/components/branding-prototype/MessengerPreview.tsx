@@ -38,7 +38,7 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [isFinMessageVisible, isTyping]);
+  }, [isFinMessageVisible, isTyping, userSentMessage]);
 
   const handleSendMessage = (text: string) => {
     // Mark that user has sent a message (for flow types that need it)
@@ -65,6 +65,22 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
                 {
                   id: "1-1",
                   content: "Hi there, welcome to Intercom 👋 You are now speaking with Fin AI Agent. I can do much more than chatbots you've seen before. Tell me as much as you can about your question and I'll do my best to help you in an instant.",
+                  timestamp: new Date(),
+                },
+              ],
+            }}
+          />
+        )}
+        
+        {userSentMessage && (
+          <MessageGroup
+            group={{
+              id: "2",
+              sender: "user",
+              messages: [
+                {
+                  id: "2-1",
+                  content: "Hello! I have a question about your product.",
                   timestamp: new Date(),
                 },
               ],

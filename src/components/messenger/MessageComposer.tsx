@@ -5,19 +5,33 @@ import { trackEvent } from "@/utils/analytics";
 
 interface MessageComposerProps {
   onSendMessage: (text: string) => void;
+  shouldAnimate?: boolean;
 }
 
 const MessageComposer: React.FC<MessageComposerProps> = ({
-  onSendMessage
+  onSendMessage,
+  shouldAnimate = false
 }) => {
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [hasText, setHasText] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     // Track when the composer is displayed
     trackEvent("composer_displayed");
   }, []);
+
+  // Handle animation state when branding disappears
+  useEffect(() => {
+    if (shouldAnimate) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+      }, 300); // Match the duration of the branding fade-out
+      return () => clearTimeout(timer);
+    }
+  }, [shouldAnimate]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -58,7 +72,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
     }
   };
 
-  return <div className="sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border py-[3px]">
+  return <div className={`sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border py-[3px] transition-transform duration-300 ease-out ${isAnimating ? "transform -translate-y-1.5" : ""}`}>
       <form onSubmit={handleSubmit} className="flex items-center">
         <div className="flex-1 mx-2">
           <div className={`flex items-center justify-between w-full h-12 rounded-full ${isActive ? "border-[1.5px] border-messenger-customer-bg" : "border border-messenger-composer-border"} bg-messenger-input-base shadow-sm`} style={{

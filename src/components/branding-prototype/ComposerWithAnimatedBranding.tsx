@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MessageComposer from "../messenger/MessageComposer";
 import AnimatedBranding from "../messenger/AnimatedBranding";
 import { BrandingFlowType } from "@/types/branding-flows";
@@ -17,9 +17,27 @@ const ComposerWithAnimatedBranding: React.FC<ComposerWithAnimatedBrandingProps> 
   finReplied,
   userMessageSent
 }) => {
+  const [shouldAnimateComposer, setShouldAnimateComposer] = useState(false);
+  
+  // Trigger composer animation when branding disappears based on flow type
+  useEffect(() => {
+    if ((flowType === "onUserMessage" && userMessageSent) || 
+        (flowType === "onFinReply" && finReplied) ||
+        (flowType === "combo" && (userMessageSent || finReplied))) {
+      setShouldAnimateComposer(true);
+    }
+  }, [flowType, finReplied, userMessageSent]);
+  
+  const handleSendMessage = (text: string) => {
+    onSendMessage(text);
+  };
+
   return (
     <div className="w-full">
-      <MessageComposer onSendMessage={onSendMessage} />
+      <MessageComposer 
+        onSendMessage={handleSendMessage} 
+        shouldAnimate={shouldAnimateComposer} 
+      />
       <AnimatedBranding 
         flowType={flowType} 
         onFinReply={finReplied} 
