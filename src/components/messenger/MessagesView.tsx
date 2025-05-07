@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useConversations } from "../../context/ConversationsContext";
 import { AIAvatar, HumanAvatar } from "../icons/MessengerIcons";
@@ -5,12 +6,13 @@ import { Button } from "../ui/button";
 import { MessageSquare } from "lucide-react";
 
 const MessagesView: React.FC = () => {
-  const { conversations, setActiveConversation } = useConversations();
+  const { conversations, setActiveConversation, addConversation } = useConversations();
 
   const startNewConversation = () => {
-    // Create a new conversation and set it as active
+    // Create a new conversation with initial welcome message
+    const newConversationId = `conv_${Date.now()}`;
     const newConversation = {
-      id: `conv_${Date.now()}`,
+      id: newConversationId,
       lastMessage: {
         content: "Hi there, welcome to Intercom 👋",
         timestamp: new Date(),
@@ -28,12 +30,13 @@ const MessagesView: React.FC = () => {
             },
           ],
         },
-      ] as any[],
-      currentAgent: "ai" as const,
+      ],
+      currentAgent: "ai",
       isActive: true,
     };
     
-    setActiveConversation(newConversation.id);
+    addConversation(newConversation);
+    setActiveConversation(newConversationId);
   };
 
   const formatTimestamp = (timestamp: Date) => {

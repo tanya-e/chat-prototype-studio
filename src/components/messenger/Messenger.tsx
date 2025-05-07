@@ -196,7 +196,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
       
       // Add system message for Kelly joining
       const systemMessageId = `system-${Date.now()}`;
-      const newSystemMessage = {
+      const newSystemMessage: SystemMessageGroup = {
         id: systemMessageId,
         type: "system",
         content: "Kelly joined the conversation",
