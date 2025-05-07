@@ -1,6 +1,6 @@
 
 import React, { useState, FormEvent, useEffect } from "react";
-import { Send, Smile, Paperclip, Image } from "lucide-react";
+import { ArrowUp, Smile, Paperclip, Image } from "lucide-react";
 import { trackEvent } from "@/utils/analytics";
 
 interface MessageComposerProps {
@@ -90,7 +90,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
                 </>}
               
               {hasText && <button type="submit" className="flex items-center justify-center w-8 h-8 rounded-full bg-messenger-customer-bg">
-                  <Send size={16} className="text-messenger-customer-text" />
+                  <ArrowUp size={16} className="text-messenger-customer-text" />
                 </button>}
             </div>
           </div>
