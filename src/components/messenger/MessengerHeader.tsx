@@ -1,6 +1,7 @@
 
 import React from "react";
-import { ArrowLeftIcon, EllipsisIcon, XIcon, AIAvatar, HumanAvatar, UnassignedAvatars } from "../icons/MessengerIcons";
+import { ArrowLeft, MoreHorizontal, X } from "lucide-react";
+import { AIAvatar, HumanAvatar, UnassignedAvatars } from "../icons/MessengerIcons";
 
 export type HeaderStateType = "ai" | "unassigned" | "human";
 
@@ -13,7 +14,7 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
     <div className="flex items-center justify-between h-16 px-2 border-b border-messenger-border">
       <div className="flex items-center">
         <button className="p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
-          <ArrowLeftIcon className="w-4 h-4" />
+          <ArrowLeft size={16} />
         </button>
         
         <div className="flex items-center">
@@ -29,10 +30,10 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
       
       <div className="flex items-center">
         <button className="p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
-          <EllipsisIcon className="w-4 h-4" />
+          <MoreHorizontal size={16} />
         </button>
         <button className="p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
-          <XIcon className="w-4 h-4" />
+          <X size={16} />
         </button>
       </div>
     </div>
