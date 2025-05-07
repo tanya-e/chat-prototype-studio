@@ -32,7 +32,7 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
           <span className="font-medium text-sm">
             {headerState === "ai" && "Fin"}
             {headerState === "unassigned" && "Intercom"}
-            {headerState === "human" && "Jenna"}
+            {headerState === "human" && "Kelly"}
           </span>
         </div>
       </div>
