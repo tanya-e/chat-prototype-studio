@@ -22,16 +22,18 @@ const PoweredByBranding: React.FC = () => {
     >
       <span
         onClick={handleClick}
-        className="cursor-pointer"
+        className="cursor-pointer shimmer-container relative overflow-hidden"
         style={{
           color: "var(--messenger-text-muted-extra)",
           fontSize: "12px",
           fontWeight: 457,
           lineHeight: "100%",
           fontStyle: "normal",
+          position: "relative",
         }}
       >
         Powered by Fin
+        <span className="shimmer absolute inset-0"></span>
       </span>
     </div>
   );
