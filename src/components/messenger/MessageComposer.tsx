@@ -9,6 +9,7 @@ interface MessageComposerProps {
 const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [hasText, setHasText] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -16,6 +17,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
       onSendMessage(message);
       setMessage("");
       setIsActive(false);
+      setHasText(false);
     }
   };
 
@@ -25,11 +27,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
-    if (e.target.value) {
-      setIsActive(true);
-    } else {
-      setIsActive(false);
-    }
+    setHasText(e.target.value.trim() !== "");
   };
 
   return (
@@ -63,7 +61,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
                 <Smile size={16} />
               </button>
               
-              {!isActive && (
+              {!hasText && (
                 <>
                   <button
                     type="button"
@@ -81,7 +79,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
                 </>
               )}
               
-              {isActive && message.trim() && (
+              {hasText && (
                 <button
                   type="submit"
                   className="flex items-center justify-center w-8 h-8 rounded-full bg-messenger-customer-bg"
