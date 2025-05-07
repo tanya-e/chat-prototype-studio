@@ -1,13 +1,7 @@
 
-import React, { useState, useRef, MouseEvent } from "react";
+import React, { useState, useRef, MouseEvent, useEffect } from "react";
 import { SmallAIAvatar, SmallHumanAvatar } from "../icons/MessengerIcons";
 import { cn } from "@/lib/utils";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 export type MessageType = {
   id: string;
@@ -36,6 +30,7 @@ interface MessageProps {
 const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = true }) => {
   const [showTimestamp, setShowTimestamp] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isUser = message.sender === "user";
   const formattedTime = message.timestamp.toLocaleTimeString([], {
     hour: "2-digit",
@@ -46,12 +41,37 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
     setMousePosition({ x: e.clientX + 4, y: e.clientY });
   };
 
+  const handleMouseEnter = () => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+    }
+    hoverTimerRef.current = setTimeout(() => {
+      setShowTimestamp(true);
+    }, 500);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+    setShowTimestamp(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimerRef.current) {
+        clearTimeout(hoverTimerRef.current);
+      }
+    };
+  }, []);
+
   if (isUser) {
     return (
       <div
         className="flex flex-col items-end mb-1 relative"
-        onMouseEnter={() => setShowTimestamp(true)}
-        onMouseLeave={() => setShowTimestamp(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
       >
         <div className="max-w-xs md:max-w-[260px] px-4 py-3 rounded-[20px] bg-messenger-customer-bg text-messenger-customer-text">
@@ -77,8 +97,8 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
   return (
     <div
       className="flex flex-col items-start mb-1 relative"
-      onMouseEnter={() => setShowTimestamp(true)}
-      onMouseLeave={() => setShowTimestamp(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
     >
       <div className="max-w-xs md:max-w-[336px] px-4 py-3 rounded-[20px] bg-messenger-ai-bg text-messenger-ai-text">
