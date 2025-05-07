@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Smile } from "lucide-react";
 import { trackEvent } from "@/utils/analytics";
 
 interface MessengerLauncherProps {
@@ -19,7 +18,11 @@ const MessengerLauncher: React.FC<MessengerLauncherProps> = ({ onClick }) => {
       onClick={handleClick}
       aria-label="Open messenger"
     >
-      <Smile className="w-6 h-6 text-white" />
+      <img 
+        src="/lovable-uploads/5fa68c45-a1ea-4eb5-ae6a-f60290864d03.png" 
+        alt="Chat icon" 
+        className="w-6 h-6"
+      />
     </button>
   );
 };
