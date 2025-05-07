@@ -23,7 +23,7 @@ const MessengerLoadingState: React.FC<MessengerLoadingStateProps> = ({ type }) =
           </div>
 
           <div className="flex-1 flex flex-col items-center justify-center">
-            <div className="w-20 h-20 mb-4">
+            <div className="w-[42px] h-[42px] mb-4">
               <img 
                 src="/lovable-uploads/10f0c4fa-0b70-4529-8497-c9f9eb1b7844.png" 
                 alt="Company Logo" 
@@ -59,7 +59,7 @@ const MessengerLoadingState: React.FC<MessengerLoadingStateProps> = ({ type }) =
           />
           
           <div className="flex-1 flex flex-col items-center justify-center">
-            <div className="w-20 h-20 mb-4">
+            <div className="w-[42px] h-[42px] mb-4">
               <img 
                 src="/lovable-uploads/10f0c4fa-0b70-4529-8497-c9f9eb1b7844.png" 
                 alt="Company Logo" 
