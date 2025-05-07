@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -19,6 +18,14 @@ interface MessengerProps {
   flowType?: BrandingFlowType;
 }
 
+// Define a separate type for system messages to avoid type conflicts
+interface SystemMessageGroup {
+  id: string;
+  type: "system";
+  content: string;
+  displayed: boolean; // Add a flag to track if message has been displayed
+}
+
 const initialMessages: MessageGroupType[] = [
   {
     id: "1",
@@ -33,14 +40,6 @@ const initialMessages: MessageGroupType[] = [
     ],
   },
 ];
-
-// Define a separate type for system messages to avoid type conflicts
-interface SystemMessageGroup {
-  id: string;
-  type: "system";
-  content: string;
-  displayed: boolean; // Add a flag to track if message has been displayed
-}
 
 const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessage" }) => {
   const [messages, setMessages] = useState<MessageGroupType[]>(initialMessages);
@@ -305,7 +304,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
 
   // If no active conversation is selected, show the messages view
   if (activeConversationId === null) {
-    return <MessagesView />;
+    return <MessagesView onClose={onClose} />;
   }
 
   return (
