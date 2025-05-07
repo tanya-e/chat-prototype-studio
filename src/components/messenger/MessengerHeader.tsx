@@ -24,7 +24,9 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
             {headerState === "human" && <HumanAvatar />}
           </div>
           
-          <span className="font-medium text-sm">Fin</span>
+          <span className="font-medium text-sm">
+            {headerState === "human" ? "Kelly" : "Fin"}
+          </span>
         </div>
       </div>
       

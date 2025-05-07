@@ -79,19 +79,7 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
         <div className="max-w-xs md:max-w-[260px] px-4 py-3 rounded-[20px] bg-messenger-customer-bg text-messenger-customer-text">
           {message.content}
         </div>
-        {/* Timestamp has been removed but structure kept for future use
-        {isLastInGroup && showTimestamp && (
-          <div 
-            className="fixed z-50 px-2 py-1 text-xs bg-messenger-base shadow-md text-messenger-text-muted rounded-md border-none pointer-events-none"
-            style={{ 
-              left: `${mousePosition.x}px`, 
-              top: `${mousePosition.y - 30}px`
-            }}
-          >
-            {formattedTime}
-          </div>
-        )}
-        */}
+        {/* Timestamp has been removed but structure kept for future use */}
       </div>
     );
   }
@@ -108,7 +96,7 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
       <div className="max-w-xs md:max-w-[336px] px-4 py-3 rounded-[20px] bg-messenger-ai-bg text-messenger-ai-text">
         {showAvatar && (
           <div className="flex items-center gap-2 mb-2">
-            {isAI ? <SmallAIAvatar /> : <SmallHumanAvatar name={isAI ? "AI" : "K"} />}
+            {isAI ? <SmallAIAvatar /> : <SmallHumanAvatar />}
             <span className="text-sm font-semibold">
               {isAI ? "Fin" : "Kelly"}
             </span>
@@ -116,19 +104,7 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
         )}
         {message.content}
       </div>
-      {/* Timestamp has been removed but structure kept for future use
-      {isLastInGroup && showTimestamp && (
-        <div 
-          className="fixed z-50 px-2 py-1 text-xs bg-messenger-base shadow-md text-messenger-text-muted rounded-md border-none pointer-events-none"
-          style={{ 
-            left: `${mousePosition.x}px`, 
-            top: `${mousePosition.y - 30}px`
-          }}
-        >
-          {formattedTime}
-        </div>
-      )}
-      */}
+      {/* Timestamp has been removed but structure kept for future use */}
     </div>
   );
 };
