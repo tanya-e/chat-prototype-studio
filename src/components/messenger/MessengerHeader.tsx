@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ArrowLeft, MoreHorizontal, Expand, ChevronLeft, X } from "lucide-react";
+import { ArrowLeft, MoreHorizontal, ChevronLeft, X } from "lucide-react";
 import { AIAvatar, HumanAvatar, UnassignedAvatars } from "../icons/MessengerIcons";
 import { trackEvent } from "@/utils/analytics";
 
@@ -53,9 +53,7 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose 
         <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
           <MoreHorizontal size={16} />
         </button>
-        <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
-          <Expand size={16} />
-        </button>
+        {/* Removed Expand button */}
         {onClose && (
           <button 
             className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
