@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ArrowLeft, MoreHorizontal, X } from "lucide-react";
+import { ArrowLeft, MoreHorizontal, Expand, ChevronLeft } from "lucide-react";
 import { AIAvatar, HumanAvatar, UnassignedAvatars } from "../icons/MessengerIcons";
 
 export type HeaderStateType = "ai" | "unassigned" | "human";
@@ -13,29 +13,36 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
   return (
     <div className="flex items-center justify-between h-16 px-2 border-b border-messenger-border">
       <div className="flex items-center">
-        <button className="p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
-          <ArrowLeft size={16} />
+        <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
+          <ChevronLeft size={16} />
         </button>
         
-        <div className="flex items-center">
-          <div className="ml-2 mr-2">
+        <div className="flex items-center gap-2">
+          <div className="relative">
             {headerState === "ai" && <AIAvatar />}
             {headerState === "unassigned" && <UnassignedAvatars />}
-            {headerState === "human" && <HumanAvatar />}
+            {headerState === "human" && (
+              <div className="relative">
+                <HumanAvatar />
+                <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></span>
+              </div>
+            )}
           </div>
           
           <span className="font-medium text-sm">
-            {headerState === "human" ? "Kelly" : "Fin"}
+            {headerState === "ai" && "Fin"}
+            {headerState === "unassigned" && "Intercom"}
+            {headerState === "human" && "Jenna"}
           </span>
         </div>
       </div>
       
       <div className="flex items-center">
-        <button className="p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
+        <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
           <MoreHorizontal size={16} />
         </button>
-        <button className="p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
-          <X size={16} />
+        <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
+          <Expand size={16} />
         </button>
       </div>
     </div>
