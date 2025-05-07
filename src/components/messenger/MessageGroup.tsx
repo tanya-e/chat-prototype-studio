@@ -2,6 +2,9 @@
 import React from "react";
 import Message, { MessageGroupType } from "./Message";
 
+// Re-export the MessageGroupType for use in other components
+export type { MessageGroupType };
+
 interface MessageGroupProps {
   group: MessageGroupType;
 }
