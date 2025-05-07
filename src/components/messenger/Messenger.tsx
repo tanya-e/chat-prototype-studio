@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -10,6 +11,8 @@ import { RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/utils/analytics";
 import { BrandingFlowType } from "@/types/branding-flows";
+import MessagesView from "./MessagesView";
+import { useConversations } from "@/context/ConversationsContext";
 
 interface MessengerProps {
   onClose?: () => void;
@@ -52,14 +55,58 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-
+  
+  const { 
+    activeConversationId, 
+    setActiveConversation, 
+    addConversation, 
+    getConversation, 
+    addMessageToConversation, 
+    updateConversation 
+  } = useConversations();
+  
+  // Initialize a conversation if it's the first render and none exists
   useEffect(() => {
     // Track when the messenger is displayed
     trackEvent("messenger_displayed");
     
+    // Only create a new conversation if we don't have an active one
+    if (!activeConversationId) {
+      const newConversationId = `conv_${Date.now()}`;
+      
+      addConversation({
+        id: newConversationId,
+        lastMessage: {
+          content: initialMessages[0].messages[0].content,
+          timestamp: initialMessages[0].messages[0].timestamp,
+        },
+        messages: [...initialMessages],
+        currentAgent: "ai",
+        isActive: true,
+      });
+    } else {
+      // If we already have an active conversation, load its messages
+      const conversation = getConversation(activeConversationId);
+      if (conversation) {
+        setMessages(conversation.messages);
+        setHeaderState(conversation.currentAgent);
+      }
+    }
+    
     // Scroll to bottom when initialized
     messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
   }, []);
+  
+  // Update messages when active conversation changes
+  useEffect(() => {
+    if (activeConversationId) {
+      const conversation = getConversation(activeConversationId);
+      if (conversation) {
+        setMessages(conversation.messages);
+        setHeaderState(conversation.currentAgent);
+      }
+    }
+  }, [activeConversationId]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -81,6 +128,8 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   }, []);
 
   const handleSendMessage = (text: string) => {
+    if (!activeConversationId) return;
+    
     const newUserMessage: MessageGroupType = {
       id: `user-${Date.now()}`,
       sender: "user",
@@ -94,6 +143,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
     };
 
     setMessages((prev) => [...prev, newUserMessage]);
+    addMessageToConversation(activeConversationId, newUserMessage);
     
     // Track that user has sent a message for the branding flow
     setUserMessageSent(true);
@@ -108,6 +158,18 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   };
 
   const resetConversation = () => {
+    if (!activeConversationId) return;
+    
+    // Reset conversation to initial state
+    updateConversation(activeConversationId, {
+      messages: [...initialMessages],
+      lastMessage: {
+        content: initialMessages[0].messages[0].content,
+        timestamp: initialMessages[0].messages[0].timestamp,
+      },
+      currentAgent: "ai"
+    });
+    
     setMessages(initialMessages);
     setSystemMessages([]);
     setIsTyping(false);
@@ -121,6 +183,8 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   };
 
   const triggerHumanHandoff = () => {
+    if (!activeConversationId) return;
+    
     // First show handover pill
     setWaitingForHuman(true);
     
@@ -132,17 +196,18 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
       
       // Add system message for Kelly joining
       const systemMessageId = `system-${Date.now()}`;
-      setSystemMessages([
-        {
-          id: systemMessageId,
-          type: "system",
-          content: "Kelly joined the conversation",
-          displayed: false
-        }
-      ]);
+      const newSystemMessage = {
+        id: systemMessageId,
+        type: "system",
+        content: "Kelly joined the conversation",
+        displayed: false
+      };
+      
+      setSystemMessages([newSystemMessage]);
       
       // Update header state to human
       setHeaderState("human");
+      updateConversation(activeConversationId, { currentAgent: "human" });
       
       // After showing the system message, show typing indicator
       setTimeout(() => {
@@ -151,27 +216,31 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         // Finally show first message from human agent
         setTimeout(() => {
           setIsTyping(false);
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: `agent-${Date.now()}`,
-              sender: "human",
-              showAvatar: true,
-              messages: [
-                {
-                  id: `agent-msg-${Date.now()}`,
-                  content: "Hi there! I'm Kelly. What can I help you with today?",
-                  timestamp: new Date(),
-                },
-              ],
-            },
-          ]);
+          
+          const newHumanMessage: MessageGroupType = {
+            id: `agent-${Date.now()}`,
+            sender: "human",
+            showAvatar: true,
+            messages: [
+              {
+                id: `agent-msg-${Date.now()}`,
+                content: "Hi there! I'm Kelly. What can I help you with today?",
+                timestamp: new Date(),
+              },
+            ],
+          };
+          
+          setMessages((prev) => [...prev, newHumanMessage]);
+          addMessageToConversation(activeConversationId, newHumanMessage);
+          
         }, 2000); // Show typing for 2 seconds
       }, 500); // Wait 0.5s after system message before typing
     }, 2000); // Show handover pill for 2 seconds
   };
 
   const simulateAiResponse = () => {
+    if (!activeConversationId) return;
+    
     setIsTyping(true);
     
     setTimeout(() => {
@@ -191,6 +260,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
       };
       
       setMessages((prev) => [...prev, newAiMessage]);
+      addMessageToConversation(activeConversationId, newAiMessage);
       
       // Track that Fin has replied for branding flow
       setFinReplied(true);
@@ -229,9 +299,18 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
 
   const interleavedMessages = getInterleavedMessages();
 
+  const handleBackClick = () => {
+    setActiveConversation(null);
+  };
+
+  // If no active conversation is selected, show the messages view
+  if (activeConversationId === null) {
+    return <MessagesView />;
+  }
+
   return (
     <div className="flex flex-col h-full bg-messenger-base overflow-hidden">
-      <MessengerHeader headerState={headerState} onClose={onClose} />
+      <MessengerHeader headerState={headerState} onClose={onClose} onBack={handleBackClick} />
       
       <div 
         ref={messagesContainerRef} 

@@ -9,9 +9,10 @@ export type HeaderStateType = "ai" | "unassigned" | "human";
 interface MessengerHeaderProps {
   headerState: HeaderStateType;
   onClose?: () => void;
+  onBack?: () => void;
 }
 
-const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose }) => {
+const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose, onBack }) => {
   const handleClose = () => {
     if (onClose) {
       trackEvent("messenger_close_clicked");
@@ -19,10 +20,20 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose 
     }
   };
 
+  const handleBack = () => {
+    if (onBack) {
+      trackEvent("messenger_back_clicked");
+      onBack();
+    }
+  };
+
   return (
     <div className="flex items-center justify-between h-16 px-2 border-b border-messenger-border">
       <div className="flex items-center">
-        <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
+        <button 
+          className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
+          onClick={handleBack}
+        >
           <ChevronLeft size={16} />
         </button>
         
@@ -44,7 +55,6 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose 
               {headerState === "unassigned" && "Intercom"}
               {headerState === "human" && "Kelly"}
             </span>
-            {/* Removed "The team can also help" text */}
           </div>
         </div>
       </div>
@@ -53,7 +63,6 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose 
         <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
           <MoreHorizontal size={16} />
         </button>
-        {/* Removed Expand button */}
         {onClose && (
           <button 
             className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
