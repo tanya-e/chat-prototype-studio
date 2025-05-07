@@ -22,7 +22,7 @@ const PoweredByBranding: React.FC = () => {
     >
       <span
         onClick={handleClick}
-        className="cursor-pointer shimmer-container"
+        className="cursor-pointer"
         style={{
           color: "var(--messenger-text-muted-extra)",
           fontSize: "12px",
@@ -32,7 +32,6 @@ const PoweredByBranding: React.FC = () => {
         }}
       >
         Powered by Fin
-        <span className="shimmer"></span>
       </span>
     </div>
   );

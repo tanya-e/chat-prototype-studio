@@ -60,7 +60,7 @@ const AnimatedBranding: React.FC<AnimatedBrandingProps> = ({
     >
       <span
         onClick={handleClick}
-        className="cursor-pointer shimmer-container"
+        className="cursor-pointer"
         style={{
           color: "var(--messenger-text-muted-extra)",
           fontSize: "12px",
@@ -70,7 +70,6 @@ const AnimatedBranding: React.FC<AnimatedBrandingProps> = ({
         }}
       >
         Powered by Fin
-        <span className="shimmer"></span>
       </span>
     </div>
   );
