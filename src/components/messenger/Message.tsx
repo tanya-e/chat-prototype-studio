@@ -35,8 +35,8 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
 
   if (isUser) {
     return (
-      <div className="flex flex-col items-end">
-        <div className="max-w-xs md:max-w-[260px] px-4 py-3 rounded-2xl bg-messenger-customer-bg text-messenger-customer-text">
+      <div className="flex flex-col items-end mb-1">
+        <div className="max-w-xs md:max-w-[260px] px-4 py-3 rounded-[20px] bg-messenger-customer-bg text-messenger-customer-text">
           {message.content}
         </div>
         {isLastInGroup && (
@@ -51,16 +51,16 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
   const isAI = message.sender === "ai";
 
   return (
-    <div className="flex flex-col items-start">
-      {showAvatar && isLastInGroup && (
+    <div className="flex flex-col items-start mb-1">
+      {showAvatar && (
         <div className="flex items-center gap-2 mb-1 mt-1">
           {isAI ? <SmallAIAvatar /> : <SmallHumanAvatar name={isAI ? "AI" : "K"} />}
           <span className="text-sm font-semibold">
-            {isAI ? "AI Assistant" : "Kelly"}
+            {isAI ? "Fin" : "Kelly"}
           </span>
         </div>
       )}
-      <div className="max-w-xs md:max-w-[336px] px-4 py-3 rounded-2xl bg-messenger-ai-bg text-messenger-ai-text">
+      <div className="max-w-xs md:max-w-[336px] px-4 py-3 rounded-[20px] bg-messenger-ai-bg text-messenger-ai-text">
         {message.content}
       </div>
       {isLastInGroup && (

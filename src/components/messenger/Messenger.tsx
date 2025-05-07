@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -13,7 +14,7 @@ const initialMessages: MessageGroupType[] = [
     messages: [
       {
         id: "1-1",
-        content: "Hello! How can I help you today?",
+        content: "Hi there, welcome to Intercom 👋 You are now speaking with Fin AI Agent. I can do much more than chatbots you've seen before. Tell me as much as you can about your question and I'll do my best to help you in an instant.",
         timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
       },
     ],
@@ -172,7 +173,7 @@ const Messenger: React.FC = () => {
           
           {isTyping && (
             <div className="mb-4">
-              <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "AI Assistant" : "Kelly"} />
+              <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "Fin" : "Kelly"} />
             </div>
           )}
           

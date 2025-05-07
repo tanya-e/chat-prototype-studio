@@ -6,7 +6,7 @@ interface TypingIndicatorProps {
   name?: string;
 }
 
-const TypingIndicator: React.FC<TypingIndicatorProps> = ({ sender, name = "AI Assistant" }) => {
+const TypingIndicator: React.FC<TypingIndicatorProps> = ({ sender, name = "Fin" }) => {
   return (
     <div className="flex items-start space-x-2">
       <div className="px-4 py-3 rounded-2xl bg-messenger-ai-bg text-messenger-ai-text inline-block">

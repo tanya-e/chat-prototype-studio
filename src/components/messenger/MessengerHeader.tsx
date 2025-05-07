@@ -16,18 +16,15 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
           <ArrowLeftIcon className="w-4 h-4" />
         </button>
         
-        <div className="ml-2">
-          {headerState === "ai" && <AIAvatar />}
-          {headerState === "unassigned" && <UnassignedAvatars />}
-          {headerState === "human" && <HumanAvatar />}
-        </div>
-        
-        {headerState === "human" && (
-          <div className="ml-2 flex flex-col items-start">
-            <span className="text-sm font-medium">Kelly</span>
-            <span className="text-xs text-messenger-text-muted">Support Agent</span>
+        <div className="flex items-center">
+          <div className="ml-2 mr-2">
+            {headerState === "ai" && <AIAvatar />}
+            {headerState === "unassigned" && <UnassignedAvatars />}
+            {headerState === "human" && <HumanAvatar />}
           </div>
-        )}
+          
+          <span className="font-medium text-sm">Fin</span>
+        </div>
       </div>
       
       <div className="flex items-center">
