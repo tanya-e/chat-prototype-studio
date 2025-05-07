@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
-import MessengerHeader from "./MessengerHeader";
-import MessageGroup from "./MessageGroup";
+import React, { useState, useEffect, useRef } from "react";
+import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
+import MessageGroup, { MessageGroupType } from "./MessageGroup";
 import TypingIndicator from "./TypingIndicator";
 import MessageComposer from "./MessageComposer";
 import SystemMessage from "./SystemMessage";
@@ -8,32 +8,49 @@ import TeamHandover from "./TeamHandover";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useMessages } from "./hooks/useMessages";
-import { triggerHumanHandoff, simulateAiResponse } from "./utils/handoffUtils";
-import { HeaderStateType } from "./types";
+
+const initialMessages: MessageGroupType[] = [
+  {
+    id: "1",
+    sender: "ai",
+    showAvatar: true,
+    messages: [
+      {
+        id: "1-1",
+        content: "Hi there, welcome to Intercom 👋 You are now speaking with Fin AI Agent. I can do much more than chatbots you've seen before. Tell me as much as you can about your question and I'll do my best to help you in an instant.",
+        timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
+      },
+    ],
+  },
+];
+
+// Define a separate type for system messages to avoid type conflicts
+interface SystemMessageGroup {
+  id: string;
+  type: "system";
+  content: string;
+  displayed: boolean; // Add a flag to track if message has been displayed
+}
 
 const Messenger: React.FC = () => {
+  const [messages, setMessages] = useState<MessageGroupType[]>(initialMessages);
+  const [systemMessages, setSystemMessages] = useState<SystemMessageGroup[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
   const [headerState, setHeaderState] = useState<HeaderStateType>("ai");
   const [waitingForHuman, setWaitingForHuman] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { toast } = useToast();
   
-  const {
-    isTyping,
-    resetConversation: resetMessages,
-    addUserMessage,
-    addAiResponse,
-    addHumanAgentMessage,
-    addSystemMessage,
-    simulateTyping,
-    getInterleavedMessages,
-    messagesEndRef
-  } = useMessages();
-  
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, systemMessages, isTyping]);
+
   // Track scroll position for handover pill styling
-  React.useEffect(() => {
+  useEffect(() => {
     const messagesContainer = messagesContainerRef.current;
     if (!messagesContainer) return;
 
@@ -47,29 +64,33 @@ const Messenger: React.FC = () => {
   }, []);
 
   const handleSendMessage = (text: string) => {
-    addUserMessage(text);
+    const newUserMessage: MessageGroupType = {
+      id: `user-${Date.now()}`,
+      sender: "user",
+      messages: [
+        {
+          id: `user-msg-${Date.now()}`,
+          content: text,
+          timestamp: new Date(),
+        },
+      ],
+    };
+
+    setMessages((prev) => [...prev, newUserMessage]);
 
     // Check if the message contains 'human' to trigger handoff
     if (text.toLowerCase().includes("human")) {
-      triggerHumanHandoff({
-        setIsTyping,
-        setHeaderState,
-        setWaitingForHuman,
-        addSystemMessage,
-        addHumanAgentMessage,
-        simulateTyping
-      });
+      triggerHumanHandoff();
     } else {
       // Otherwise, simulate AI response
-      simulateAiResponse({
-        simulateTyping,
-        addAiResponse
-      });
+      simulateAiResponse();
     }
   };
 
   const resetConversation = () => {
-    resetMessages();
+    setMessages(initialMessages);
+    setSystemMessages([]);
+    setIsTyping(false);
     setHeaderState("ai");
     setWaitingForHuman(false);
     
@@ -77,6 +98,108 @@ const Messenger: React.FC = () => {
       title: "Conversation Reset",
       description: "The conversation has been reset to the beginning.",
     });
+  };
+
+  const triggerHumanHandoff = () => {
+    setIsTyping(false);
+    setHeaderState("unassigned");
+    setWaitingForHuman(true);
+    
+    // First add the system message for Kelly joining
+    const systemMessageId = `system-${Date.now()}`;
+    setSystemMessages([
+      {
+        id: systemMessageId,
+        type: "system",
+        content: "Kelly joined the conversation",
+        displayed: false
+      }
+    ]);
+    
+    // Wait a small delay before showing the human response sequence
+    setTimeout(() => {
+      // Update header state to human
+      setHeaderState("human");
+      setWaitingForHuman(false);
+      
+      // Show typing indicator
+      setTimeout(() => {
+        setIsTyping(true);
+        
+        // Finally show first message from agent
+        setTimeout(() => {
+          setIsTyping(false);
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: `agent-${Date.now()}`,
+              sender: "human",
+              showAvatar: true,
+              messages: [
+                {
+                  id: `agent-msg-${Date.now()}`,
+                  content: "Hi there! I'm Kelly. What can I help you with today?",
+                  timestamp: new Date(),
+                },
+              ],
+            },
+          ]);
+        }, 2000);
+      }, 1000);
+    }, 3000);
+  };
+
+  const simulateAiResponse = () => {
+    setIsTyping(true);
+    
+    setTimeout(() => {
+      setIsTyping(false);
+      
+      const newAiMessage: MessageGroupType = {
+        id: `ai-${Date.now()}`,
+        sender: "ai",
+        showAvatar: true,
+        messages: [
+          {
+            id: `ai-msg-${Date.now()}`,
+            content: "I understand your question. Let me help you with that. Is there anything specific you'd like to know?",
+            timestamp: new Date(),
+          },
+        ],
+      };
+      
+      setMessages((prev) => [...prev, newAiMessage]);
+    }, 1500);
+  };
+
+  // Function to interleave messages and system messages for display
+  const getInterleavedMessages = () => {
+    const result = [...messages];
+    
+    // Insert system messages at the right positions based on their timestamps
+    systemMessages.forEach(sysMsg => {
+      // Find the index where the human agent's first message appears
+      const humanAgentMessageIndex = result.findIndex(
+        msg => msg.sender === "human"
+      );
+      
+      // If there's a human agent message, insert system message before it
+      // Otherwise insert at the end
+      const insertIndex = humanAgentMessageIndex >= 0 
+        ? humanAgentMessageIndex 
+        : result.length;
+        
+      // Insert the system message if not already in the result
+      if (!sysMsg.displayed) {
+        result.splice(insertIndex, 0, {
+          id: sysMsg.id,
+          type: "system-message",
+          content: sysMsg.content
+        } as any);
+      }
+    });
+    
+    return result;
   };
 
   const interleavedMessages = getInterleavedMessages();
@@ -115,7 +238,7 @@ const Messenger: React.FC = () => {
                 />
               );
             } else {
-              return <MessageGroup key={item.id} group={item} />;
+              return <MessageGroup key={item.id} group={item as MessageGroupType} />;
             }
           })}
           
