@@ -1,8 +1,7 @@
 
 import React from "react";
-import { MoreHorizontal, Expand, ChevronLeft } from "lucide-react";
+import { ArrowLeft, MoreHorizontal, Expand, ChevronLeft } from "lucide-react";
 import { AIAvatar, HumanAvatar, UnassignedAvatars } from "../icons/MessengerIcons";
-import { UntitledIcon } from "@/components/ui/untitled-icon";
 
 export type HeaderStateType = "ai" | "unassigned" | "human";
 
@@ -15,7 +14,7 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
     <div className="flex items-center justify-between h-16 px-2 border-b border-messenger-border">
       <div className="flex items-center">
         <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
-          <UntitledIcon icon={ChevronLeft} size={16} />
+          <ChevronLeft size={16} />
         </button>
         
         <div className="flex items-center gap-2">
@@ -40,10 +39,10 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
       
       <div className="flex items-center">
         <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
-          <UntitledIcon icon={MoreHorizontal} size={16} />
+          <MoreHorizontal size={16} />
         </button>
         <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
-          <UntitledIcon icon={Expand} size={16} />
+          <Expand size={16} />
         </button>
       </div>
     </div>

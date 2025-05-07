@@ -1,7 +1,6 @@
 
 import React, { useState, FormEvent } from "react";
 import { Send, Smile, Paperclip, Image } from "lucide-react";
-import { UntitledIcon } from "@/components/ui/untitled-icon";
 
 interface MessageComposerProps {
   onSendMessage: (text: string) => void;
@@ -60,7 +59,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
                 type="button"
                 className="p-1 text-messenger-icon-muted hover:text-messenger-text-default"
               >
-                <UntitledIcon icon={Smile} size={16} />
+                <Smile size={16} />
               </button>
               
               {!hasText && (
@@ -69,14 +68,14 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
                     type="button"
                     className="p-1 text-messenger-icon-muted hover:text-messenger-text-default"
                   >
-                    <UntitledIcon icon={Image} size={16} />
+                    <Image size={16} />
                   </button>
                   
                   <button
                     type="button"
                     className="p-1 text-messenger-icon-muted hover:text-messenger-text-default"
                   >
-                    <UntitledIcon icon={Paperclip} size={16} />
+                    <Paperclip size={16} />
                   </button>
                 </>
               )}
@@ -86,7 +85,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
                   type="submit"
                   className="flex items-center justify-center w-8 h-8 rounded-full bg-messenger-customer-bg"
                 >
-                  <UntitledIcon icon={Send} size={16} className="text-messenger-customer-text" />
+                  <Send size={16} className="text-messenger-customer-text" />
                 </button>
               )}
             </div>
