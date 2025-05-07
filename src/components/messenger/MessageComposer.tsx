@@ -31,7 +31,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 py-3 border-t border-messenger-border">
+    <div className="sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 py-3 border-messenger-border">
       <form onSubmit={handleSubmit} className="flex items-center">
         <div className="flex-1 mx-2">
           <div 
