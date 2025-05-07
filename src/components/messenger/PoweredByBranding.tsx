@@ -11,7 +11,7 @@ const PoweredByBranding: React.FC = () => {
     >
       <span
         style={{
-          color: "var(--messenger-text-muted)",
+          color: "var(--messenger-text-muted-extra)",
           fontSize: "12px",
           fontWeight: 457,
           lineHeight: "100%",

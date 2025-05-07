@@ -52,7 +52,18 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
               value={message}
               onChange={handleInputChange}
               onFocus={handleInputFocus}
+              style={{
+                "::placeholder": {
+                  color: "var(--messenger-text-muted-extra)"
+                }
+              }}
             />
+            
+            <style jsx>{`
+              input::placeholder {
+                color: var(--messenger-text-muted-extra);
+              }
+            `}</style>
             
             <div className="flex items-center justify-end gap-4">
               <button

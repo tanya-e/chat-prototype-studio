@@ -121,6 +121,11 @@ const DesignTokens = () => {
                 darkValue="#A3A3A3"
               />
               <TokenItem 
+                name="--messenger-text-muted-extra" 
+                lightValue="#A3A3A3" 
+                darkValue="#737373"
+              />
+              <TokenItem 
                 name="--messenger-icon-muted" 
                 lightValue="#737373" 
                 darkValue="#A3A3A3"
