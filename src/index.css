@@ -40,12 +40,12 @@
     --messenger-text-default: #1C1C1C;
     --messenger-text-muted: #737373;
     --messenger-icon-muted: #737373;
-    --messenger-customer-bg: #FCC5C5;
-    --messenger-customer-text: #1C1C1C;
+    --messenger-customer-bg: #5E6AD2;
+    --messenger-customer-text: #FAFAFA;
     --messenger-ai-bg: #F5F5F5;
     --messenger-ai-text: #1C1C1C;
     --messenger-composer-bg: rgba(56, 56, 56, 0.80);
-    --messenger-composer-border: #E5E5E5;
+    --messenger-composer-border: #5E6AD2;
     --messenger-input-base: #FFFFFF; /* Neutral/Container-base for light mode */
 
     --radius: 0.5rem;
