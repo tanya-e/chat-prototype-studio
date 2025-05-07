@@ -169,10 +169,6 @@ const Messenger: React.FC = () => {
             <MessageGroup key={group.id} group={group} />
           ))}
           
-          {waitingForHuman && (
-            <TeamHandover />
-          )}
-          
           {headerState === "human" && !waitingForHuman && !isTyping && messages.some(g => g.sender === "human") && (
             <SystemMessage message="Kelly joined the conversation" timestamp={new Date()} />
           )}
@@ -185,6 +181,12 @@ const Messenger: React.FC = () => {
           
           <div ref={messagesEndRef} />
         </div>
+        
+        {waitingForHuman && (
+          <div className="flex justify-center mb-4 mt-auto px-4">
+            <TeamHandover />
+          </div>
+        )}
         
         <MessageComposer onSendMessage={handleSendMessage} />
       </div>
