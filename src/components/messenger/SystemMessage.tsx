@@ -1,7 +1,6 @@
 
 import React from "react";
 import { SmallHumanAvatar } from "../icons/MessengerIcons";
-import { cn } from "@/lib/utils";
 
 interface SystemMessageProps {
   message: string;
@@ -14,13 +13,6 @@ const SystemMessage: React.FC<SystemMessageProps> = ({
   timestamp,
   type = "default" 
 }) => {
-  const formattedTime = timestamp
-    ? timestamp.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : "";
-    
   // Extract name from message if it's a human-joined type
   const isHumanJoined = type === "human-joined";
   let nameContent = null;
@@ -37,18 +29,36 @@ const SystemMessage: React.FC<SystemMessageProps> = ({
   return (
     <div className="flex justify-center my-4 animate-fade-in">
       {isHumanJoined ? (
-        <div className="flex items-center gap-1.5 p-2 px-3 rounded-full">
+        <div className="flex items-center gap-1.5 py-2 px-6">
           <SmallHumanAvatar />
-          <div className="text-xs text-messenger-text-default">
-            {nameContent}{messageContent}
+          <div className="text-xs">
+            <span 
+              style={{
+                color: 'var(--messenger-text-default)',
+                fontSize: '12px',
+                fontWeight: 500,
+                lineHeight: '150%',
+                letterSpacing: '0.048px'
+              }}
+            >
+              {nameContent}
+            </span>
+            <span 
+              style={{
+                color: 'var(--messenger-text-muted)',
+                fontSize: '12px',
+                fontWeight: 400,
+                lineHeight: '150%',
+                letterSpacing: '0.048px'
+              }}
+            >
+              {messageContent}
+            </span>
           </div>
-          {timestamp && <span className="text-messenger-text-muted text-xs ml-1">• {formattedTime}</span>}
         </div>
       ) : (
-        <div className={cn(
-          "text-xs text-messenger-text-muted bg-messenger-base px-4 py-1 rounded-full"
-        )}>
-          {message} {timestamp && `• ${formattedTime}`}
+        <div className="text-xs text-messenger-text-muted bg-messenger-base px-4 py-1 rounded-full">
+          {message}
         </div>
       )}
     </div>

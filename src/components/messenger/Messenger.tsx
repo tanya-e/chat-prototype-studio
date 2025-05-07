@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -25,8 +24,16 @@ const initialMessages: MessageGroupType[] = [
   },
 ];
 
+// Define a separate type for system messages to avoid type conflicts
+interface SystemMessageGroup {
+  id: string;
+  type: "system";
+  content: string;
+}
+
 const Messenger: React.FC = () => {
   const [messages, setMessages] = useState<MessageGroupType[]>(initialMessages);
+  const [systemMessages, setSystemMessages] = useState<SystemMessageGroup[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [headerState, setHeaderState] = useState<HeaderStateType>("ai");
   const [waitingForHuman, setWaitingForHuman] = useState(false);
@@ -39,7 +46,7 @@ const Messenger: React.FC = () => {
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+  }, [messages, systemMessages, isTyping]);
 
   // Track scroll position for handover pill styling
   useEffect(() => {
@@ -81,6 +88,7 @@ const Messenger: React.FC = () => {
 
   const resetConversation = () => {
     setMessages(initialMessages);
+    setSystemMessages([]);
     setIsTyping(false);
     setHeaderState("ai");
     setWaitingForHuman(false);
@@ -104,20 +112,13 @@ const Messenger: React.FC = () => {
         setWaitingForHuman(false);
         
         // First show the system message that Kelly joined
-        setMessages((prev) => [
+        setSystemMessages((prev) => [
           ...prev,
           {
             id: `system-${Date.now()}`,
-            sender: "system",
-            messages: [
-              {
-                id: `system-msg-${Date.now()}`,
-                content: "Kelly joined the conversation",
-                timestamp: new Date(),
-                type: "human-joined"
-              },
-            ],
-          },
+            type: "system",
+            content: "Kelly joined the conversation"
+          }
         ]);
         
         // Then show agent typing
@@ -171,6 +172,25 @@ const Messenger: React.FC = () => {
     }, 1500);
   };
 
+  // Function to interleave messages and system messages for display
+  const getInterleavedMessages = () => {
+    const result = [...messages];
+    
+    // Insert system messages at the right positions based on their timestamps
+    systemMessages.forEach(sysMsg => {
+      let insertIndex = result.length;
+      result.splice(insertIndex, 0, {
+        id: sysMsg.id,
+        type: "system-message",
+        content: sysMsg.content
+      } as any);
+    });
+    
+    return result;
+  };
+
+  const interleavedMessages = getInterleavedMessages();
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
       <div className="flex gap-4 mb-4">
@@ -195,18 +215,19 @@ const Messenger: React.FC = () => {
           ref={messagesContainerRef} 
           className="flex-1 overflow-y-auto p-4"
         >
-          {messages.map((group) => (
-            group.sender === "system" ? (
-              <SystemMessage
-                key={group.id}
-                message={group.messages[0].content}
-                timestamp={group.messages[0].timestamp}
-                type="human-joined"
-              />
-            ) : (
-              <MessageGroup key={group.id} group={group} />
-            )
-          ))}
+          {interleavedMessages.map((item) => {
+            if ((item as any).type === "system-message") {
+              return (
+                <SystemMessage
+                  key={item.id}
+                  message={(item as any).content}
+                  type="human-joined"
+                />
+              );
+            } else {
+              return <MessageGroup key={item.id} group={item as MessageGroupType} />;
+            }
+          })}
           
           {isTyping && (
             <div className="mb-4">
