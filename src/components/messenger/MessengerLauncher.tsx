@@ -21,7 +21,7 @@ const MessengerLauncher: React.FC<MessengerLauncherProps> = ({ onClick }) => {
       <img 
         src="/lovable-uploads/5fa68c45-a1ea-4eb5-ae6a-f60290864d03.png" 
         alt="Chat icon" 
-        className="w-6 h-6"
+        className="w-[0.3rem] h-[0.3rem]"
       />
     </button>
   );
