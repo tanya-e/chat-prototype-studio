@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
 import TypingIndicator from "./TypingIndicator";
-import MessageComposer from "./MessageComposer";
 import SystemMessage from "./SystemMessage";
 import TeamHandover from "./TeamHandover";
-import PoweredByBranding from "./PoweredByBranding";
+import ComposerWithBranding from "./ComposerWithBranding";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -260,8 +259,7 @@ const Messenger: React.FC = () => {
           </div>
         )}
         
-        <MessageComposer onSendMessage={handleSendMessage} />
-        <PoweredByBranding />
+        <ComposerWithBranding onSendMessage={handleSendMessage} />
       </div>
     </div>
   );
