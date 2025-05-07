@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MessengerContainer from "../components/messenger/MessengerContainer";
+
 const Index = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
@@ -8,11 +10,14 @@ const Index = () => {
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
   };
+
   useEffect(() => {
     // Apply theme to document
     document.documentElement.className = theme;
   }, [theme]);
-  return <div className={`min-h-screen ${theme === "dark" ? "dark" : ""}`}>
+
+  return (
+    <div className={`min-h-screen ${theme === "dark" ? "dark" : ""}`}>
       <div className="container mx-auto py-8">
         <div className="mb-6 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Web Messenger Prototype</h1>
@@ -20,10 +25,13 @@ const Index = () => {
             <Link to="/design-tokens" className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
               View Design Tokens
             </Link>
-            <Link to="/branding-flows" className="px-4 py-2 bg-blue-100 text-white dark:bg-blue-600 rounded-lg">
+            <Link to="/branding-flows" className="px-4 py-2 bg-blue-500 text-white dark:bg-blue-600 rounded-lg">
               Branding Flows Prototype
             </Link>
-            <button onClick={toggleTheme} className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
+            <button
+              onClick={toggleTheme}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg"
+            >
               Toggle {theme === "light" ? "Dark" : "Light"} Mode
             </button>
           </div>
@@ -39,6 +47,8 @@ const Index = () => {
         {/* Messenger container will handle the launcher and messenger */}
         <MessengerContainer />
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
