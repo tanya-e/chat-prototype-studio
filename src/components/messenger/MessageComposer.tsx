@@ -15,7 +15,8 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [hasText, setHasText] = useState(false);
-  const [brandingVisible, setBrandingVisible] = useState(true);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
 
   useEffect(() => {
     // Track when the composer is displayed
@@ -25,10 +26,12 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
   // Handle animation state when branding disappears
   useEffect(() => {
     if (shouldAnimate) {
-      // Small delay to match the branding fade-out timing
+      setIsAnimating(true);
       const animationTimer = setTimeout(() => {
-        setBrandingVisible(false);
-      }, 300);
+        setIsAnimating(false);
+        // Once the initial animation is complete, trigger the padding animation
+        setAnimationComplete(true);
+      }, 300); // Match the duration of the branding fade-out
       return () => clearTimeout(animationTimer);
     }
   }, [shouldAnimate]);
@@ -74,11 +77,11 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
 
   return (
     <div 
-      className="sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border"
+      className={`sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border transition-all duration-300 ease-out`}
       style={{
         paddingTop: "3px",
-        // Smooth transition for padding-bottom
-        paddingBottom: brandingVisible ? "3px" : "15px",
+        // Apply both animation states with a smooth transition
+        paddingBottom: animationComplete ? "15px" : isAnimating ? "19px" : "3px",
         transition: "padding-bottom 400ms ease-out"
       }}
     >
