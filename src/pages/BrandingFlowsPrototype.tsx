@@ -64,6 +64,18 @@ const BrandingFlowsPrototype: React.FC = () => {
                   <div className="font-medium">On Set Delay (after 4 seconds)</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">Branding disappears after 4 seconds</div>
                 </button>
+
+                <button 
+                  className={`w-full text-left p-3 rounded-md transition-colors ${
+                    selectedFlowType === "onFinReply" 
+                      ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200" 
+                      : "hover:bg-gray-100 dark:hover:bg-gray-700"
+                  }`} 
+                  onClick={() => setSelectedFlowType("onFinReply")}
+                >
+                  <div className="font-medium">On Fin Reply (with stagger)</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Branding fades 300ms after Fin sends a message</div>
+                </button>
               </div>
             </div>
           </div>

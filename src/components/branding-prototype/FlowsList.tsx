@@ -11,8 +11,8 @@ const FlowsList: React.FC<FlowsListProps> = ({ selectedFlow, onFlowSelect }) => 
   const flows = [
     {
       id: "onFinReply" as BrandingFlowType,
-      label: "On Fin reply",
-      description: "Branding disappears when Fin sends a message"
+      label: "On Fin reply (with stagger)",
+      description: "Branding fades 300ms after Fin sends a message"
     },
     {
       id: "afterDelay" as BrandingFlowType,

@@ -22,7 +22,11 @@ const AnimatedBranding: React.FC<AnimatedBrandingProps> = ({
     
     // Different logic based on flow type
     if (flowType === "onFinReply" && onFinReply) {
-      setIsVisible(false);
+      // Add 300ms stagger delay for onFinReply flow type
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+      }, 300); // Stagger by 300ms after Fin replies
+      return () => clearTimeout(timer);
     } else if (flowType === "afterDelay") {
       const timer = setTimeout(() => {
         setIsVisible(false);
