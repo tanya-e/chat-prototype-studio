@@ -33,16 +33,18 @@ const ComposerWithAnimatedBranding: React.FC<ComposerWithAnimatedBrandingProps> 
   };
 
   return (
-    <div className="w-full" style={{ position: 'relative' }}>
+    <div className="w-full relative">
       <MessageComposer 
         onSendMessage={handleSendMessage} 
         shouldAnimate={shouldAnimateComposer} 
       />
-      <AnimatedBranding 
-        flowType={flowType} 
-        onFinReply={finReplied} 
-        onUserMessage={userMessageSent} 
-      />
+      <div className="absolute w-full" style={{ bottom: "100%" }}>
+        <AnimatedBranding 
+          flowType={flowType} 
+          onFinReply={finReplied} 
+          onUserMessage={userMessageSent} 
+        />
+      </div>
     </div>
   );
 };
