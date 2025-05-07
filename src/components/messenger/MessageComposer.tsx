@@ -1,4 +1,3 @@
-
 import React, { useState, FormEvent, useEffect } from "react";
 import { ArrowUp, Smile, Paperclip, Image } from "lucide-react";
 import { trackEvent } from "@/utils/analytics";
@@ -72,7 +71,14 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
     }
   };
 
-  return <div className={`sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border py-[3px] transition-all duration-300 ease-out ${isAnimating ? "transform translate-y-1.5" : ""}`}>
+  return (
+    <div 
+      className={`sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border transition-all duration-300 ease-out`}
+      style={{
+        paddingTop: "3px", 
+        paddingBottom: isAnimating ? "19px" : "3px" // Add extra padding when animated
+      }}
+    >
       <form onSubmit={handleSubmit} className="flex items-center">
         <div className="flex-1 mx-2">
           <div className={`flex items-center justify-between w-full h-12 rounded-full ${isActive ? "border-[1.5px] border-messenger-customer-bg" : "border border-messenger-composer-border"} bg-messenger-input-base shadow-sm`} style={{
@@ -110,7 +116,8 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
           </div>
         </div>
       </form>
-    </div>;
+    </div>
+  );
 };
 
 export default MessageComposer;
