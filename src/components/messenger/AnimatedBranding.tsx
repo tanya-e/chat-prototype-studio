@@ -44,17 +44,18 @@ const AnimatedBranding: React.FC<AnimatedBrandingProps> = ({
 
   return (
     <div 
-      className={`w-full flex justify-center items-center transition-all duration-300 ease-in ${
+      className={`w-full flex justify-center items-center transition-all duration-300 ease-out ${
         isVisible 
           ? "opacity-100" 
           : "opacity-0 pointer-events-none"
       }`}
       style={{
-        height: isVisible ? 'auto' : '0px',
+        height: isVisible ? '22px' : '0px', // Exact height to avoid layout shift
         padding: isVisible ? "4px 0 8px" : "0",
         overflow: 'hidden',
         margin: 0,
-        position: 'relative'
+        position: 'relative',
+        transition: "height 300ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), padding 300ms cubic-bezier(0.4, 0, 0.2, 1)"
       }}
     >
       <span

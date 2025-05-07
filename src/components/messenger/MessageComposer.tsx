@@ -77,12 +77,12 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
 
   return (
     <div 
-      className={`sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border transition-all duration-300 ease-out`}
+      className="sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border"
       style={{
         paddingTop: "3px",
-        // Apply both animation states with a smooth transition
-        paddingBottom: animationComplete ? "15px" : isAnimating ? "19px" : "3px",
-        transition: "padding-bottom 400ms ease-out"
+        // Apply animation with improved easing for smoother transition
+        paddingBottom: animationComplete ? "15px" : isAnimating ? "15px" : "3px",
+        transition: "padding-bottom 300ms cubic-bezier(0.4, 0, 0.2, 1)"
       }}
     >
       <form onSubmit={handleSubmit} className="flex items-center">
