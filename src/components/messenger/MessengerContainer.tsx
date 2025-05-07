@@ -21,7 +21,7 @@ const MessengerContainer: React.FC = () => {
     <div className="fixed bottom-4 right-4 flex flex-col items-end justify-end gap-2 z-50">
       {isMessengerOpen ? (
         <div 
-          className="animate-messenger-open w-[400px] h-[720px] origin-bottom-right"
+          className="animate-messenger-open w-[400px] h-[600px] max-h-[80vh] origin-bottom-right"
           style={{ boxShadow: "0px 5px 40px rgba(0, 0, 0, 0.2)" }}
         >
           <Messenger onClose={closeMessenger} />
