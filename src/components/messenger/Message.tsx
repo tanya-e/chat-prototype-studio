@@ -28,7 +28,6 @@ interface MessageProps {
 }
 
 const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = true }) => {
-  const [showTimestamp, setShowTimestamp] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isUser = message.sender === "user";
@@ -45,9 +44,11 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
     if (hoverTimerRef.current) {
       clearTimeout(hoverTimerRef.current);
     }
-    hoverTimerRef.current = setTimeout(() => {
-      setShowTimestamp(true);
-    }, 500);
+    // Timestamp display has been disabled as requested
+    // The timer setup is kept for easy re-enabling
+    // hoverTimerRef.current = setTimeout(() => {
+    //   setShowTimestamp(true);
+    // }, 500);
   };
 
   const handleMouseLeave = () => {
@@ -55,7 +56,8 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
       clearTimeout(hoverTimerRef.current);
       hoverTimerRef.current = null;
     }
-    setShowTimestamp(false);
+    // Timestamp hiding code kept for structure
+    // setShowTimestamp(false);
   };
 
   useEffect(() => {
@@ -77,6 +79,7 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
         <div className="max-w-xs md:max-w-[260px] px-4 py-3 rounded-[20px] bg-messenger-customer-bg text-messenger-customer-text">
           {message.content}
         </div>
+        {/* Timestamp has been removed but structure kept for future use
         {isLastInGroup && showTimestamp && (
           <div 
             className="fixed z-50 px-2 py-1 text-xs bg-messenger-base shadow-md text-messenger-text-muted rounded-md border-none pointer-events-none"
@@ -88,6 +91,7 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
             {formattedTime}
           </div>
         )}
+        */}
       </div>
     );
   }
@@ -112,6 +116,7 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
         )}
         {message.content}
       </div>
+      {/* Timestamp has been removed but structure kept for future use
       {isLastInGroup && showTimestamp && (
         <div 
           className="fixed z-50 px-2 py-1 text-xs bg-messenger-base shadow-md text-messenger-text-muted rounded-md border-none pointer-events-none"
@@ -123,6 +128,7 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
           {formattedTime}
         </div>
       )}
+      */}
     </div>
   );
 };
