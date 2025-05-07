@@ -25,7 +25,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
             <input
               type="text"
               placeholder="Ask your question..."
-              className="flex-1 bg-transparent border-none focus:outline-none text-sm"
+              className="flex-1 bg-transparent border-none focus:outline-none text-sm text-messenger-text-muted font-['SF_Pro'] text-[14px] font-normal leading-[20px]"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
