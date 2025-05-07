@@ -1,3 +1,4 @@
+
 import React, { useState, FormEvent, useEffect } from "react";
 import { ArrowUp, Smile, Paperclip, Image } from "lucide-react";
 import { trackEvent } from "@/utils/analytics";
@@ -15,6 +16,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
   const [isActive, setIsActive] = useState(false);
   const [hasText, setHasText] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
 
   useEffect(() => {
     // Track when the composer is displayed
@@ -25,10 +27,12 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
   useEffect(() => {
     if (shouldAnimate) {
       setIsAnimating(true);
-      const timer = setTimeout(() => {
+      const animationTimer = setTimeout(() => {
         setIsAnimating(false);
+        // Once the initial animation is complete, trigger the padding animation
+        setAnimationComplete(true);
       }, 300); // Match the duration of the branding fade-out
-      return () => clearTimeout(timer);
+      return () => clearTimeout(animationTimer);
     }
   }, [shouldAnimate]);
 
@@ -75,8 +79,10 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
     <div 
       className={`sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border transition-all duration-300 ease-out`}
       style={{
-        paddingTop: "3px", 
-        paddingBottom: isAnimating ? "19px" : "3px" // Add extra padding when animated
+        paddingTop: "3px",
+        // Apply both animation states with a smooth transition
+        paddingBottom: animationComplete ? "15px" : isAnimating ? "19px" : "3px",
+        transition: "padding-bottom 400ms ease-out"
       }}
     >
       <form onSubmit={handleSubmit} className="flex items-center">
