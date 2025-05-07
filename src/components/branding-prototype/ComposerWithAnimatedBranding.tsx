@@ -26,6 +26,14 @@ const ComposerWithAnimatedBranding: React.FC<ComposerWithAnimatedBrandingProps> 
         (flowType === "combo" && (userMessageSent || finReplied))) {
       setShouldAnimateComposer(true);
     }
+    
+    // For afterDelay flow, set animation after 4 seconds
+    if (flowType === "afterDelay") {
+      const timer = setTimeout(() => {
+        setShouldAnimateComposer(true);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
   }, [flowType, finReplied, userMessageSent]);
   
   const handleSendMessage = (text: string) => {

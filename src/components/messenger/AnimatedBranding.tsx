@@ -26,7 +26,7 @@ const AnimatedBranding: React.FC<AnimatedBrandingProps> = ({
     } else if (flowType === "afterDelay") {
       const timer = setTimeout(() => {
         setIsVisible(false);
-      }, 4000);
+      }, 4000); // Hide after 4 seconds regardless of user interaction
       return () => clearTimeout(timer);
     } else if (flowType === "onUserMessage" && onUserMessage) {
       setIsVisible(false);
