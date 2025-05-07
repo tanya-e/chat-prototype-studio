@@ -16,7 +16,7 @@ const TeamHandover: React.FC<TeamHandoverProps> = ({
         variant === "fixed" ? "border border-[rgba(0,0,0,0.05)] shadow-sm" : ""
       }`}
       style={{ 
-        width: "272px",
+        // width: "272px",
         ...(variant === "fixed" ? {
           boxShadow: "0px 1px 2px 0px rgba(15, 15, 15, 0.06)"
         } : {})
