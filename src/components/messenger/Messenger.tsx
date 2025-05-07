@@ -4,6 +4,7 @@ import MessageGroup, { MessageGroupType } from "./MessageGroup";
 import TypingIndicator from "./TypingIndicator";
 import MessageComposer from "./MessageComposer";
 import SystemMessage from "./SystemMessage";
+import TeamHandover from "./TeamHandover";
 
 const initialMessages: MessageGroupType[] = [
   {
@@ -142,7 +143,7 @@ const Messenger: React.FC = () => {
           ))}
           
           {waitingForHuman && (
-            <SystemMessage message="Hang tight, we are connecting you…" timestamp={new Date()} />
+            <TeamHandover />
           )}
           
           {headerState === "human" && !waitingForHuman && !isTyping && messages.some(g => g.sender === "human") && (
