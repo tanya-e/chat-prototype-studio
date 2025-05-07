@@ -90,7 +90,7 @@ export const ConversationsProvider: React.FC<ConversationsProviderProps> = ({ ch
           return {
             ...conv,
             lastMessage: messageContent,
-            sender: group.sender === "user" ? "ai" : group.sender, // Map "user" to "ai" for the Conversation type
+            sender: group.sender,
             senderName: group.sender === "ai" ? "Fin" : "Kelly",
             timestamp: new Date(),
             isNew: false,
