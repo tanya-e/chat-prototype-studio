@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -47,7 +48,7 @@ const Messenger: React.FC = () => {
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, systemMessages, isTyping]);
+  }, [messages, systemMessages, isTyping, waitingForHuman]);
 
   // Track scroll position for handover pill styling
   useEffect(() => {
@@ -101,32 +102,34 @@ const Messenger: React.FC = () => {
   };
 
   const triggerHumanHandoff = () => {
-    setIsTyping(false);
-    setHeaderState("unassigned");
+    // First show handover pill
     setWaitingForHuman(true);
     
-    // First add the system message for Kelly joining
-    const systemMessageId = `system-${Date.now()}`;
-    setSystemMessages([
-      {
-        id: systemMessageId,
-        type: "system",
-        content: "Kelly joined the conversation",
-        displayed: false
-      }
-    ]);
-    
-    // Wait a small delay before showing the human response sequence
+    // After 2 seconds, update header state and show system message
     setTimeout(() => {
-      // Update header state to human
-      setHeaderState("human");
+      // Update header state to unassigned first
+      setHeaderState("unassigned");
       setWaitingForHuman(false);
       
-      // Show typing indicator
+      // Add system message for Kelly joining
+      const systemMessageId = `system-${Date.now()}`;
+      setSystemMessages([
+        {
+          id: systemMessageId,
+          type: "system",
+          content: "Kelly joined the conversation",
+          displayed: false
+        }
+      ]);
+      
+      // Update header state to human
+      setHeaderState("human");
+      
+      // After showing the system message, show typing indicator
       setTimeout(() => {
         setIsTyping(true);
         
-        // Finally show first message from agent
+        // Finally show first message from human agent
         setTimeout(() => {
           setIsTyping(false);
           setMessages((prev) => [
@@ -144,9 +147,9 @@ const Messenger: React.FC = () => {
               ],
             },
           ]);
-        }, 2000);
-      }, 1000);
-    }, 3000);
+        }, 2000); // Show typing for 2 seconds
+      }, 500); // Wait 0.5s after system message before typing
+    }, 2000); // Show handover pill for 2 seconds
   };
 
   const simulateAiResponse = () => {
