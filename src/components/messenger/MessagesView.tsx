@@ -1,9 +1,10 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useConversations } from "../../context/ConversationsContext";
 import { AIAvatar, HumanAvatar } from "../icons/MessengerIcons";
 import { Button } from "../ui/button";
 import { MessageSquare, X } from "lucide-react";
+import MessengerLoadingState from "./MessengerLoadingState";
 
 interface MessagesViewProps {
   onClose?: () => void;
@@ -11,6 +12,8 @@ interface MessagesViewProps {
 
 const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
   const { conversations, setActiveConversation, addConversation } = useConversations();
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
 
   const startNewConversation = () => {
     // Create a new conversation with initial welcome message
@@ -40,7 +43,25 @@ const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
     };
     
     addConversation(newConversation);
-    setActiveConversation(newConversationId);
+    setIsLoading(true);
+    setSelectedConversationId(newConversationId);
+    
+    // Simulate loading time
+    setTimeout(() => {
+      setIsLoading(false);
+      setActiveConversation(newConversationId);
+    }, 500); // 500ms delay
+  };
+
+  const handleSelectConversation = (conversationId: string) => {
+    setIsLoading(true);
+    setSelectedConversationId(conversationId);
+    
+    // Simulate loading time
+    setTimeout(() => {
+      setIsLoading(false);
+      setActiveConversation(conversationId);
+    }, 500); // 500ms delay
   };
 
   const formatTimestamp = (timestamp: Date) => {
@@ -56,6 +77,10 @@ const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
       return timestamp.toLocaleDateString([], { month: 'short', day: 'numeric' });
     }
   };
+
+  if (isLoading) {
+    return <MessengerLoadingState type="toConversation" />;
+  }
 
   return (
     <div className="flex flex-col h-full bg-messenger-base">
@@ -82,7 +107,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
               <button
                 key={conversation.id}
                 className="flex items-center w-full p-4 text-left hover:bg-messenger-ai-bg transition-colors"
-                onClick={() => setActiveConversation(conversation.id)}
+                onClick={() => handleSelectConversation(conversation.id)}
               >
                 <div className="relative mr-3">
                   {conversation.currentAgent === "ai" ? (

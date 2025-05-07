@@ -10,9 +10,10 @@ interface MessengerHeaderProps {
   headerState: HeaderStateType;
   onClose?: () => void;
   onBack?: () => void;
+  subtitle?: string;
 }
 
-const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose, onBack }) => {
+const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose, onBack, subtitle }) => {
   const handleClose = () => {
     if (onClose) {
       trackEvent("messenger_close_clicked");
@@ -30,12 +31,14 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose,
   return (
     <div className="flex items-center justify-between h-16 px-2 border-b border-messenger-border">
       <div className="flex items-center">
-        <button 
-          className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
-          onClick={handleBack}
-        >
-          <ChevronLeft size={16} />
-        </button>
+        {onBack && (
+          <button 
+            className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
+            onClick={handleBack}
+          >
+            <ChevronLeft size={16} />
+          </button>
+        )}
         
         <div className="flex items-center gap-2">
           <div className="relative">
@@ -55,6 +58,7 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose,
               {headerState === "unassigned" && "Intercom"}
               {headerState === "human" && "Kelly"}
             </span>
+            {subtitle && <span className="text-xs text-messenger-text-muted">{subtitle}</span>}
           </div>
         </div>
       </div>
