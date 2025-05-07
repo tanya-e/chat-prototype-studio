@@ -1,18 +1,22 @@
+
 import React, { useState } from "react";
 import MessengerContainer from "../components/messenger/MessengerContainer";
 import { Link } from "react-router-dom";
 import { BrandingFlowType } from "@/types/branding-flows";
 import FlowsList from "../components/branding-prototype/FlowsList";
+
 type PrototypeTab = "flows";
+
 const BrandingFlowsPrototype: React.FC = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [selectedFlowType, setSelectedFlowType] = useState<BrandingFlowType>("onUserMessage");
   const [activeTab, setActiveTab] = useState<PrototypeTab>("flows");
-
+  
   // Toggle theme for demonstration purposes
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
   };
+  
   return <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${theme === "dark" ? "dark" : ""}`}>
       <div className="container mx-auto py-8">
         <div className="mb-6 flex justify-between items-center">
@@ -29,7 +33,9 @@ const BrandingFlowsPrototype: React.FC = () => {
         
         <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <div className="mb-4">
-            <button className="px-4 py-2 rounded-md bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
+            <button 
+              className="px-4 py-2 rounded-md bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
+            >
               Branding Flows
             </button>
           </div>
@@ -67,10 +73,13 @@ const BrandingFlowsPrototype: React.FC = () => {
           </div>
           
           <div className="md:w-2/3">
-            
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 h-[600px] flex items-center justify-center">
+              <MessengerContainer flowType={selectedFlowType} />
+            </div>
           </div>
         </div>
       </div>
     </div>;
 };
+
 export default BrandingFlowsPrototype;
