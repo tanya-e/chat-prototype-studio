@@ -1,9 +1,7 @@
-
 import React, { useState } from "react";
 import MessengerContainer from "../components/messenger/MessengerContainer";
 import { Link } from "react-router-dom";
 import { BrandingFlowType } from "@/types/branding-flows";
-
 const BrandingFlowsPrototype: React.FC = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [selectedFlowType, setSelectedFlowType] = useState<BrandingFlowType>("onUserMessage");
@@ -12,7 +10,6 @@ const BrandingFlowsPrototype: React.FC = () => {
   const toggleTheme = () => {
     setTheme(prev => prev === "light" ? "dark" : "light");
   };
-
   return <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${theme === "dark" ? "dark" : ""}`}>
       <div className="container mx-auto py-8">
         <div className="mb-6 flex justify-between items-center">
@@ -30,12 +27,10 @@ const BrandingFlowsPrototype: React.FC = () => {
         <div className="flex flex-col md:flex-row gap-6">
           <div className="md:w-1/3">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-              <h2 className="text-lg font-medium mb-4">Branding Flow</h2>
+              <h2 className="text-lg font-medium mb-4">Trigger options
+            </h2>
               <div className="space-y-2">
-                <button 
-                  className="w-full text-left p-3 rounded-md transition-colors bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
-                  onClick={() => setSelectedFlowType("onUserMessage")}
-                >
+                <button className="w-full text-left p-3 rounded-md transition-colors bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200" onClick={() => setSelectedFlowType("onUserMessage")}>
                   <div className="font-medium">On user first message</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">Branding disappears when user sends a message</div>
                 </button>
@@ -49,5 +44,4 @@ const BrandingFlowsPrototype: React.FC = () => {
       </div>
     </div>;
 };
-
 export default BrandingFlowsPrototype;
