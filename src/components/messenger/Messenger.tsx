@@ -1,18 +1,19 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
 import TypingIndicator from "./TypingIndicator";
 import SystemMessage from "./SystemMessage";
 import TeamHandover from "./TeamHandover";
-import ComposerWithBranding from "./ComposerWithBranding";
+import ComposerWithAnimatedBranding from "../branding-prototype/ComposerWithAnimatedBranding";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/utils/analytics";
+import { BrandingFlowType } from "@/types/branding-flows";
 
 interface MessengerProps {
   onClose?: () => void;
+  flowType?: BrandingFlowType;
 }
 
 const initialMessages: MessageGroupType[] = [
@@ -38,13 +39,15 @@ interface SystemMessageGroup {
   displayed: boolean; // Add a flag to track if message has been displayed
 }
 
-const Messenger: React.FC<MessengerProps> = ({ onClose }) => {
+const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessage" }) => {
   const [messages, setMessages] = useState<MessageGroupType[]>(initialMessages);
   const [systemMessages, setSystemMessages] = useState<SystemMessageGroup[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [headerState, setHeaderState] = useState<HeaderStateType>("ai");
   const [waitingForHuman, setWaitingForHuman] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [userMessageSent, setUserMessageSent] = useState(false);
+  const [finReplied, setFinReplied] = useState(false);
   const { toast } = useToast();
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -91,6 +94,9 @@ const Messenger: React.FC<MessengerProps> = ({ onClose }) => {
     };
 
     setMessages((prev) => [...prev, newUserMessage]);
+    
+    // Track that user has sent a message for the branding flow
+    setUserMessageSent(true);
 
     // Check if the message contains 'human' to trigger handoff
     if (text.toLowerCase().includes("human")) {
@@ -185,6 +191,9 @@ const Messenger: React.FC<MessengerProps> = ({ onClose }) => {
       };
       
       setMessages((prev) => [...prev, newAiMessage]);
+      
+      // Track that Fin has replied for branding flow
+      setFinReplied(true);
     }, 1500);
   };
 
@@ -257,7 +266,12 @@ const Messenger: React.FC<MessengerProps> = ({ onClose }) => {
         </div>
       )}
       
-      <ComposerWithBranding onSendMessage={handleSendMessage} />
+      <ComposerWithAnimatedBranding 
+        onSendMessage={handleSendMessage} 
+        flowType={flowType}
+        finReplied={finReplied}
+        userMessageSent={userMessageSent}
+      />
     </div>
   );
 };

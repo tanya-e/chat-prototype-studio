@@ -3,8 +3,15 @@ import React, { useState } from "react";
 import MessengerLauncher from "./MessengerLauncher";
 import Messenger from "./Messenger";
 import { trackEvent } from "@/utils/analytics";
+import { BrandingFlowType } from "@/types/branding-flows";
 
-const MessengerContainer: React.FC = () => {
+interface MessengerContainerProps {
+  flowType?: BrandingFlowType;
+}
+
+const MessengerContainer: React.FC<MessengerContainerProps> = ({ 
+  flowType = "onUserMessage" 
+}) => {
   const [isMessengerOpen, setIsMessengerOpen] = useState(false);
 
   const openMessenger = () => {
@@ -24,7 +31,7 @@ const MessengerContainer: React.FC = () => {
           className="animate-messenger-open w-[400px] h-[95vh] max-h-[95vh] rounded-2xl overflow-hidden origin-bottom-right"
           style={{ boxShadow: "0px 5px 40px rgba(0, 0, 0, 0.2)" }}
         >
-          <Messenger onClose={closeMessenger} />
+          <Messenger onClose={closeMessenger} flowType={flowType} />
         </div>
       ) : (
         <MessengerLauncher onClick={openMessenger} />
