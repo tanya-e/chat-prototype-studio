@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -13,7 +12,6 @@ import { trackEvent } from "@/utils/analytics";
 import { BrandingFlowType } from "@/types/branding-flows";
 import MessagesView from "./MessagesView";
 import { useConversations } from "@/context/ConversationsContext";
-import MessengerLoadingState from "./MessengerLoadingState";
 
 interface MessengerProps {
   onClose?: () => void;
@@ -52,8 +50,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   const [isScrolled, setIsScrolled] = useState(false);
   const [userMessageSent, setUserMessageSent] = useState(false);
   const [finReplied, setFinReplied] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingType, setLoadingType] = useState<"toMessages" | "toConversation">("toMessages");
+  
   const { toast } = useToast();
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -301,22 +298,10 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   };
 
   const handleBackClick = () => {
-    setLoadingType("toMessages");
-    setIsLoading(true);
-    
-    // Simulate loading time with increased delay (at least 2 seconds)
-    setTimeout(() => {
-      setIsLoading(false);
-      setActiveConversation(null);
-    }, 2000); // 2 seconds delay
+    setActiveConversation(null);
   };
 
   const interleavedMessages = getInterleavedMessages();
-
-  // If loading, show loading state
-  if (isLoading) {
-    return <MessengerLoadingState type={loadingType} />;
-  }
 
   // If no active conversation is selected, show the messages view
   if (activeConversationId === null) {

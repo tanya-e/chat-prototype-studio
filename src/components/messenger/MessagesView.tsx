@@ -3,7 +3,6 @@ import { useConversations } from "../../context/ConversationsContext";
 import { AIAvatar, HumanAvatar } from "../icons/MessengerIcons";
 import { Button } from "../ui/button";
 import { MessageSquare, X } from "lucide-react";
-import MessengerLoadingState from "./MessengerLoadingState";
 
 interface MessagesViewProps {
   onClose?: () => void;
@@ -11,8 +10,6 @@ interface MessagesViewProps {
 
 const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
   const { conversations, setActiveConversation, addConversation } = useConversations();
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
 
   const startNewConversation = () => {
     // Create a new conversation with initial welcome message
@@ -42,25 +39,11 @@ const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
     };
     
     addConversation(newConversation);
-    setIsLoading(true);
-    setSelectedConversationId(newConversationId);
-    
-    // Simulate loading time with increased delay (at least 2 seconds)
-    setTimeout(() => {
-      setIsLoading(false);
-      setActiveConversation(newConversationId);
-    }, 2000);
+    setActiveConversation(newConversationId);
   };
 
   const handleSelectConversation = (conversationId: string) => {
-    setIsLoading(true);
-    setSelectedConversationId(conversationId);
-    
-    // Simulate loading time with increased delay (at least 2 seconds)
-    setTimeout(() => {
-      setIsLoading(false);
-      setActiveConversation(conversationId);
-    }, 2000);
+    setActiveConversation(conversationId);
   };
 
   const formatTimestamp = (timestamp: Date) => {
@@ -76,10 +59,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
       return timestamp.toLocaleDateString([], { month: 'short', day: 'numeric' });
     }
   };
-
-  if (isLoading) {
-    return <MessengerLoadingState type="toConversation" />;
-  }
 
   return (
     <div className="flex flex-col h-full bg-messenger-base">
