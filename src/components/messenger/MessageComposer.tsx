@@ -1,6 +1,6 @@
 
 import React, { useState, FormEvent } from "react";
-import { PaperclipIcon, SendIcon, MicIcon } from "../icons/MessengerIcons";
+import { Send } from "lucide-react";
 
 interface MessageComposerProps {
   onSendMessage: (text: string) => void;
@@ -46,15 +46,13 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
               <button
                 type="submit"
                 disabled={!message.trim()}
-                className={`p-2 rounded-full ml-1 ${
+                className={`flex items-center justify-center w-8 h-8 rounded-full ml-1 ${
                   message.trim()
-                    ? "text-white bg-blue-500 hover:bg-blue-600"
+                    ? "bg-messenger-customer-bg"
                     : "text-messenger-icon-muted"
                 }`}
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 12H18M18 12L13 7M18 12L13 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <Send size={16} className={message.trim() ? "text-messenger-text-default" : ""} />
               </button>
             </div>
           </div>
