@@ -25,7 +25,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
     setMessage(e.target.value);
     setHasText(e.target.value.trim() !== "");
   };
-  return <div className="sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border py-[5px]">
+  return <div className="sticky bottom-0 w-full bg-gradient-to-b from-transparent via-messenger-base to-messenger-base px-3 border-messenger-border py-[3px]">
       <form onSubmit={handleSubmit} className="flex items-center">
         <div className="flex-1 mx-2">
           <div className={`flex items-center justify-between w-full h-12 rounded-full ${isActive ? "border-[1.5px] border-messenger-customer-bg" : "border border-messenger-composer-border"} bg-messenger-input-base shadow-sm`} style={{
