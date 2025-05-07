@@ -35,10 +35,10 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
       <form onSubmit={handleSubmit} className="flex items-center">
         <div className="flex-1 mx-2">
           <div 
-            className={`flex items-center px-4 py-2 justify-between w-full h-12 rounded-full ${
+            className={`flex items-center justify-between w-full h-12 rounded-full ${
               isActive 
-                ? "border-[1.5px] border-messenger-customer-bg" 
-                : "border border-messenger-composer-border"
+                ? "border-[1.5px] border-messenger-customer-bg px-[16px] py-[8px]" 
+                : "border border-messenger-composer-border px-4 py-2"
             } bg-white shadow-sm`}
             style={{
               boxShadow: "0px 0px 4px 0px rgba(15, 15, 15, 0.16)"
