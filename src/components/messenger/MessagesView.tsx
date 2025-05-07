@@ -58,10 +58,8 @@ const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
 
   return (
     <div className="flex flex-col h-full bg-messenger-base">
-      <div className="flex items-center h-16 px-5 border-b border-messenger-border">
-        <div className="flex items-center gap-2 flex-1 justify-center">
-          <h1 className="text-lg font-semibold">Messages</h1>
-        </div>
+      <div className="flex items-center justify-between h-16 px-5 border-b border-messenger-border">
+        <h1 className="text-lg font-semibold">Messages</h1>
         {onClose && (
           <button 
             className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
