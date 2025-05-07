@@ -44,11 +44,7 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose 
               {headerState === "unassigned" && "Intercom"}
               {headerState === "human" && "Kelly"}
             </span>
-            {headerState === "ai" && (
-              <span className="text-xs text-messenger-text-muted">
-                The team can also help
-              </span>
-            )}
+            {/* Removed "The team can also help" text */}
           </div>
         </div>
       </div>
