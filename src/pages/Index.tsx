@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Messenger from "../components/messenger/Messenger";
+import MessengerContainer from "../components/messenger/MessengerContainer";
 
 const Index = () => {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -36,10 +36,13 @@ const Index = () => {
         <p className="mb-6">
           A messaging component prototype with AI assistant and human agent handoff.
           <br />
-          Try typing "I want to speak to a human" to see the handoff flow.
+          Click the launcher in the bottom right corner to open the messenger.
+          <br />
+          Try typing "I want to speak to a human" in the messenger to see the handoff flow.
         </p>
         
-        <Messenger />
+        {/* Messenger container will handle the launcher and messenger */}
+        <MessengerContainer />
       </div>
     </div>
   );

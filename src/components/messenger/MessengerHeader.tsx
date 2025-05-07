@@ -1,15 +1,24 @@
 
 import React from "react";
-import { ArrowLeft, MoreHorizontal, Expand, ChevronLeft } from "lucide-react";
+import { ArrowLeft, MoreHorizontal, Expand, ChevronLeft, X } from "lucide-react";
 import { AIAvatar, HumanAvatar, UnassignedAvatars } from "../icons/MessengerIcons";
+import { trackEvent } from "@/utils/analytics";
 
 export type HeaderStateType = "ai" | "unassigned" | "human";
 
 interface MessengerHeaderProps {
   headerState: HeaderStateType;
+  onClose?: () => void;
 }
 
-const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
+const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState, onClose }) => {
+  const handleClose = () => {
+    if (onClose) {
+      trackEvent("messenger_close_clicked");
+      onClose();
+    }
+  };
+
   return (
     <div className="flex items-center justify-between h-16 px-2 border-b border-messenger-border">
       <div className="flex items-center">
@@ -29,11 +38,18 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
             )}
           </div>
           
-          <span className="font-medium text-sm">
-            {headerState === "ai" && "Fin"}
-            {headerState === "unassigned" && "Intercom"}
-            {headerState === "human" && "Kelly"}
-          </span>
+          <div className="flex flex-col">
+            <span className="font-medium text-sm">
+              {headerState === "ai" && "Fin"}
+              {headerState === "unassigned" && "Intercom"}
+              {headerState === "human" && "Kelly"}
+            </span>
+            {headerState === "ai" && (
+              <span className="text-xs text-messenger-text-muted">
+                The team can also help
+              </span>
+            )}
+          </div>
         </div>
       </div>
       
@@ -44,6 +60,14 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({ headerState }) => {
         <button className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl">
           <Expand size={16} />
         </button>
+        {onClose && (
+          <button 
+            className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
+            onClick={handleClose}
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
     </div>
   );

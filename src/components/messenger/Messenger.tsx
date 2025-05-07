@@ -8,6 +8,11 @@ import ComposerWithBranding from "./ComposerWithBranding";
 import { Button } from "@/components/ui/button";
 import { RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { trackEvent } from "@/utils/analytics";
+
+interface MessengerProps {
+  onClose?: () => void;
+}
 
 const initialMessages: MessageGroupType[] = [
   {
@@ -32,7 +37,7 @@ interface SystemMessageGroup {
   displayed: boolean; // Add a flag to track if message has been displayed
 }
 
-const Messenger: React.FC = () => {
+const Messenger: React.FC<MessengerProps> = ({ onClose }) => {
   const [messages, setMessages] = useState<MessageGroupType[]>(initialMessages);
   const [systemMessages, setSystemMessages] = useState<SystemMessageGroup[]>([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -43,6 +48,14 @@ const Messenger: React.FC = () => {
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Track when the messenger is displayed
+    trackEvent("messenger_displayed");
+    
+    // Scroll to bottom when initialized
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  }, []);
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -207,60 +220,43 @@ const Messenger: React.FC = () => {
   const interleavedMessages = getInterleavedMessages();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
-      <div className="flex gap-4 mb-4">
-        <Button 
-          variant="outline" 
-          onClick={resetConversation}
-          className="flex gap-2 items-center"
-        >
-          <RotateCcw size={16} />
-          Reset Conversation
-        </Button>
-      </div>
+    <div className="flex flex-col h-full bg-messenger-base rounded-2xl overflow-hidden">
+      <MessengerHeader headerState={headerState} onClose={onClose} />
+      
       <div 
-        className="w-full max-w-[400px] h-[720px] bg-messenger-base rounded-2xl flex flex-col shadow-xl overflow-hidden"
-        style={{
-          boxShadow: "0px 5px 40px 0px var(--messenger-elevated)"
-        }}
+        ref={messagesContainerRef} 
+        className="flex-1 overflow-y-auto p-4"
       >
-        <MessengerHeader headerState={headerState} />
+        {interleavedMessages.map((item) => {
+          if ((item as any).type === "system-message") {
+            return (
+              <SystemMessage
+                key={item.id}
+                message={(item as any).content}
+                type="human-joined"
+              />
+            );
+          } else {
+            return <MessageGroup key={item.id} group={item as MessageGroupType} />;
+          }
+        })}
         
-        <div 
-          ref={messagesContainerRef} 
-          className="flex-1 overflow-y-auto p-4"
-        >
-          {interleavedMessages.map((item) => {
-            if ((item as any).type === "system-message") {
-              return (
-                <SystemMessage
-                  key={item.id}
-                  message={(item as any).content}
-                  type="human-joined"
-                />
-              );
-            } else {
-              return <MessageGroup key={item.id} group={item as MessageGroupType} />;
-            }
-          })}
-          
-          {isTyping && (
-            <div className="mb-4">
-              <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "Fin" : "Kelly"} />
-            </div>
-          )}
-          
-          <div ref={messagesEndRef} />
-        </div>
-        
-        {waitingForHuman && (
-          <div className="flex justify-center mb-4 mt-auto px-4">
-            <TeamHandover variant={isScrolled ? "fixed" : "default"} />
+        {isTyping && (
+          <div className="mb-4">
+            <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "Fin" : "Kelly"} />
           </div>
         )}
         
-        <ComposerWithBranding onSendMessage={handleSendMessage} />
+        <div ref={messagesEndRef} />
       </div>
+      
+      {waitingForHuman && (
+        <div className="flex justify-center mb-4 mt-auto px-4">
+          <TeamHandover variant={isScrolled ? "fixed" : "default"} />
+        </div>
+      )}
+      
+      <ComposerWithBranding onSendMessage={handleSendMessage} />
     </div>
   );
 };
