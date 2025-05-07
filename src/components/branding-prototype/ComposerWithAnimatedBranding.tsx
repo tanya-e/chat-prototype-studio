@@ -33,7 +33,7 @@ const ComposerWithAnimatedBranding: React.FC<ComposerWithAnimatedBrandingProps> 
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full transition-all duration-300 ease-out">
       <MessageComposer 
         onSendMessage={handleSendMessage} 
         shouldAnimate={shouldAnimateComposer} 
