@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -11,13 +10,26 @@ import { RotateCcw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/utils/analytics";
 import { BrandingFlowType } from "@/types/branding-flows";
-import { useConversations } from "./ConversationsContext";
-import MessagesView from "./MessagesView";
 
 interface MessengerProps {
   onClose?: () => void;
   flowType?: BrandingFlowType;
 }
+
+const initialMessages: MessageGroupType[] = [
+  {
+    id: "1",
+    sender: "ai",
+    showAvatar: true,
+    messages: [
+      {
+        id: "1-1",
+        content: "Hi there, welcome to Intercom 👋 You are now speaking with Fin AI Agent. I can do much more than chatbots you've seen before. Tell me as much as you can about your question and I'll do my best to help you in an instant.",
+        timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
+      },
+    ],
+  },
+];
 
 // Define a separate type for system messages to avoid type conflicts
 interface SystemMessageGroup {
@@ -28,7 +40,7 @@ interface SystemMessageGroup {
 }
 
 const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessage" }) => {
-  const [isMessagesView, setIsMessagesView] = useState(false);
+  const [messages, setMessages] = useState<MessageGroupType[]>(initialMessages);
   const [systemMessages, setSystemMessages] = useState<SystemMessageGroup[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [headerState, setHeaderState] = useState<HeaderStateType>("ai");
@@ -38,24 +50,10 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   const [finReplied, setFinReplied] = useState(false);
   const { toast } = useToast();
   
-  const {
-    conversations,
-    currentConversationId,
-    addMessageToCurrentConversation,
-    createNewConversation,
-    setCurrentConversation,
-    getCurrentMessages
-  } = useConversations();
-  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize a conversation if none exists
   useEffect(() => {
-    if (conversations.length === 0 && !isMessagesView) {
-      createNewConversation();
-    }
-    
     // Track when the messenger is displayed
     trackEvent("messenger_displayed");
     
@@ -65,10 +63,8 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
 
   // Scroll to bottom when messages change
   useEffect(() => {
-    if (!isMessagesView) { // Only scroll in conversation view
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [getCurrentMessages(), systemMessages, isTyping, waitingForHuman, isMessagesView]);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, systemMessages, isTyping, waitingForHuman]);
 
   // Track scroll position for handover pill styling
   useEffect(() => {
@@ -97,7 +93,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
       ],
     };
 
-    addMessageToCurrentConversation(newUserMessage);
+    setMessages((prev) => [...prev, newUserMessage]);
     
     // Track that user has sent a message for the branding flow
     setUserMessageSent(true);
@@ -112,10 +108,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   };
 
   const resetConversation = () => {
-    if (currentConversationId) {
-      createNewConversation();
-    }
-    
+    setMessages(initialMessages);
     setSystemMessages([]);
     setIsTyping(false);
     setHeaderState("ai");
@@ -158,22 +151,21 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         // Finally show first message from human agent
         setTimeout(() => {
           setIsTyping(false);
-          
-          const newAgentMessage: MessageGroupType = {
-            id: `agent-${Date.now()}`,
-            sender: "human",
-            showAvatar: true,
-            messages: [
-              {
-                id: `agent-msg-${Date.now()}`,
-                content: "Hi there! I'm Kelly. What can I help you with today?",
-                timestamp: new Date(),
-              },
-            ],
-          };
-          
-          addMessageToCurrentConversation(newAgentMessage);
-          
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: `agent-${Date.now()}`,
+              sender: "human",
+              showAvatar: true,
+              messages: [
+                {
+                  id: `agent-msg-${Date.now()}`,
+                  content: "Hi there! I'm Kelly. What can I help you with today?",
+                  timestamp: new Date(),
+                },
+              ],
+            },
+          ]);
         }, 2000); // Show typing for 2 seconds
       }, 500); // Wait 0.5s after system message before typing
     }, 2000); // Show handover pill for 2 seconds
@@ -198,7 +190,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         ],
       };
       
-      addMessageToCurrentConversation(newAiMessage);
+      setMessages((prev) => [...prev, newAiMessage]);
       
       // Track that Fin has replied for branding flow
       setFinReplied(true);
@@ -207,7 +199,6 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
 
   // Function to interleave messages and system messages for display
   const getInterleavedMessages = () => {
-    const messages = getCurrentMessages();
     const result = [...messages];
     
     // Insert system messages at the right positions based on their timestamps
@@ -237,79 +228,50 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   };
 
   const interleavedMessages = getInterleavedMessages();
-  
-  const handleBackClick = () => {
-    setIsMessagesView(true);
-  };
-  
-  const handleStartNewConversation = () => {
-    createNewConversation();
-    setIsMessagesView(false);
-  };
-  
-  const handleSelectConversation = (id: string) => {
-    setCurrentConversation(id);
-    setIsMessagesView(false);
-  };
 
   return (
     <div className="flex flex-col h-full bg-messenger-base overflow-hidden">
-      {isMessagesView ? (
-        <MessagesView 
-          conversations={conversations} 
-          onNewConversation={handleStartNewConversation}
-          onSelectConversation={handleSelectConversation}
-        />
-      ) : (
-        <>
-          <MessengerHeader 
-            headerState={headerState} 
-            onClose={onClose} 
-            onBack={handleBackClick} 
-            showBackButton={true} 
-          />
-          
-          <div 
-            ref={messagesContainerRef} 
-            className="flex-1 overflow-y-auto p-4"
-          >
-            {interleavedMessages.map((item) => {
-              if ((item as any).type === "system-message") {
-                return (
-                  <SystemMessage
-                    key={item.id}
-                    message={(item as any).content}
-                    type="human-joined"
-                  />
-                );
-              } else {
-                return <MessageGroup key={item.id} group={item as MessageGroupType} />;
-              }
-            })}
-            
-            {isTyping && (
-              <div className="mb-4">
-                <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "Fin" : "Kelly"} />
-              </div>
-            )}
-            
-            <div ref={messagesEndRef} />
+      <MessengerHeader headerState={headerState} onClose={onClose} />
+      
+      <div 
+        ref={messagesContainerRef} 
+        className="flex-1 overflow-y-auto p-4"
+      >
+        {interleavedMessages.map((item) => {
+          if ((item as any).type === "system-message") {
+            return (
+              <SystemMessage
+                key={item.id}
+                message={(item as any).content}
+                type="human-joined"
+              />
+            );
+          } else {
+            return <MessageGroup key={item.id} group={item as MessageGroupType} />;
+          }
+        })}
+        
+        {isTyping && (
+          <div className="mb-4">
+            <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "Fin" : "Kelly"} />
           </div>
-          
-          {waitingForHuman && (
-            <div className="flex justify-center mb-4 mt-auto px-4">
-              <TeamHandover variant={isScrolled ? "fixed" : "default"} />
-            </div>
-          )}
-          
-          <ComposerWithAnimatedBranding 
-            onSendMessage={handleSendMessage} 
-            flowType={flowType}
-            finReplied={finReplied}
-            userMessageSent={userMessageSent}
-          />
-        </>
+        )}
+        
+        <div ref={messagesEndRef} />
+      </div>
+      
+      {waitingForHuman && (
+        <div className="flex justify-center mb-4 mt-auto px-4">
+          <TeamHandover variant={isScrolled ? "fixed" : "default"} />
+        </div>
       )}
+      
+      <ComposerWithAnimatedBranding 
+        onSendMessage={handleSendMessage} 
+        flowType={flowType}
+        finReplied={finReplied}
+        userMessageSent={userMessageSent}
+      />
     </div>
   );
 };
