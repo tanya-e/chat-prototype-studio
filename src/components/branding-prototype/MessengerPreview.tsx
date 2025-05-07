@@ -4,8 +4,7 @@ import MessengerHeader from "../messenger/MessengerHeader";
 import MessageGroup from "../messenger/MessageGroup";
 import TypingIndicator from "../messenger/TypingIndicator";
 import { BrandingFlowType } from "../../types/branding-flows";
-import MessageComposer from "../messenger/MessageComposer";
-import AnimatedBranding from "../messenger/AnimatedBranding";
+import ComposerWithAnimatedBranding from "./ComposerWithAnimatedBranding";
 
 interface MessengerPreviewProps {
   flowType: BrandingFlowType;
@@ -46,9 +45,14 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
     setUserSentMessage(true);
   };
 
+  // Mock the onClose function for MessengerHeader
+  const handleClose = () => {
+    // This is just a preview, so we don't need to do anything
+  };
+
   return (
-    <div className="flex flex-col h-full w-full bg-messenger-base overflow-hidden rounded-lg">
-      <MessengerHeader headerState="ai" />
+    <div className="flex flex-col h-full w-full bg-messenger-base overflow-hidden rounded-lg shadow-md">
+      <MessengerHeader headerState="ai" onClose={handleClose} />
       
       <div className="flex-1 overflow-y-auto p-4">
         {isFinMessageVisible && (
@@ -78,14 +82,12 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
       </div>
       
       <div className="mt-auto">
-        <div className="relative">
-          <MessageComposer onSendMessage={handleSendMessage} />
-          <AnimatedBranding 
-            flowType={flowType} 
-            onFinReply={isFinMessageVisible}
-            onUserMessage={userSentMessage}
-          />
-        </div>
+        <ComposerWithAnimatedBranding 
+          onSendMessage={handleSendMessage} 
+          flowType={flowType} 
+          finReplied={isFinMessageVisible}
+          userMessageSent={userSentMessage}
+        />
       </div>
     </div>
   );
