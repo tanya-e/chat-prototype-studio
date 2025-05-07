@@ -1,11 +1,14 @@
-
 import React from "react";
 import { useConversations } from "../../context/ConversationsContext";
 import { AIAvatar, HumanAvatar } from "../icons/MessengerIcons";
 import { Button } from "../ui/button";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, X } from "lucide-react";
 
-const MessagesView: React.FC = () => {
+interface MessagesViewProps {
+  onClose?: () => void;
+}
+
+const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
   const { conversations, setActiveConversation, addConversation } = useConversations();
 
   const startNewConversation = () => {
@@ -20,7 +23,7 @@ const MessagesView: React.FC = () => {
       messages: [
         {
           id: "1",
-          sender: "ai",
+          sender: "ai" as const,
           showAvatar: true,
           messages: [
             {
@@ -31,7 +34,7 @@ const MessagesView: React.FC = () => {
           ],
         },
       ],
-      currentAgent: "ai",
+      currentAgent: "ai" as const,
       isActive: true,
     };
     
@@ -55,8 +58,18 @@ const MessagesView: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full bg-messenger-base">
-      <div className="flex items-center justify-between h-16 px-6 border-b border-messenger-border">
-        <h1 className="text-lg font-semibold">Messages</h1>
+      <div className="flex items-center h-16 px-5 border-b border-messenger-border">
+        <div className="flex items-center gap-2 flex-1 justify-center">
+          <h1 className="text-lg font-semibold">Messages</h1>
+        </div>
+        {onClose && (
+          <button 
+            className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
+            onClick={onClose}
+          >
+            <X size={16} />
+          </button>
+        )}
       </div>
       
       <div className="flex-1 overflow-y-auto">
