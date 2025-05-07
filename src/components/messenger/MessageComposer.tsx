@@ -1,6 +1,6 @@
 
 import React, { useState, FormEvent } from "react";
-import { Send, Smile, Paperclip, GIF } from "lucide-react";
+import { Send, Smile, Paperclip, Image } from "lucide-react";
 
 interface MessageComposerProps {
   onSendMessage: (text: string) => void;
@@ -69,7 +69,7 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
                     type="button"
                     className="p-1 text-messenger-icon-muted hover:text-messenger-text-default"
                   >
-                    <GIF size={16} />
+                    <Image size={16} />
                   </button>
                   
                   <button
