@@ -37,11 +37,12 @@ const MessageComposer: React.FC<MessageComposerProps> = ({ onSendMessage }) => {
           <div 
             className={`flex items-center justify-between w-full h-12 rounded-full ${
               isActive 
-                ? "border-[1.5px] border-messenger-customer-bg px-[16px] py-[8px]" 
-                : "border border-messenger-composer-border px-4 py-2"
+                ? "border-[1.5px] border-messenger-customer-bg" 
+                : "border border-messenger-composer-border"
             } bg-white shadow-sm`}
             style={{
-              boxShadow: "0px 0px 4px 0px rgba(15, 15, 15, 0.16)"
+              boxShadow: "0px 0px 4px 0px rgba(15, 15, 15, 0.16)",
+              padding: isActive ? "8px 8px 8px 16px" : "8px 16px"
             }}
           >
             <input
