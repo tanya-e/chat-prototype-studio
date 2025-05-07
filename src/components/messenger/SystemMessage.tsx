@@ -16,7 +16,7 @@ const SystemMessage: React.FC<SystemMessageProps> = ({ message, timestamp }) => 
 
   return (
     <div className="flex justify-center my-4">
-      <div className="text-xs text-messenger-text-muted bg-messenger-base px-4 py-1 rounded-full">
+      <div className="text-xs text-messenger-text-muted bg-messenger-base px-4 py-1 rounded-full animate-fade-in">
         {message} {timestamp && `• ${formattedTime}`}
       </div>
     </div>

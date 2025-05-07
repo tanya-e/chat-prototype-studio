@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -63,22 +62,10 @@ const Messenger: React.FC = () => {
     setHeaderState("unassigned");
     setWaitingForHuman(true);
     
-    // Add system message
+    // Add system message for connecting
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `system-${Date.now()}`,
-          sender: "ai",
-          messages: [
-            {
-              id: `system-msg-${Date.now()}`,
-              content: "Hang tight, we are connecting you…",
-              timestamp: new Date(),
-            },
-          ],
-        },
-      ]);
+      // We no longer add this as a message group, but as a system message
+      // that will be rendered separately
       
       // Simulate agent joining after a delay
       setTimeout(() => {
@@ -86,20 +73,7 @@ const Messenger: React.FC = () => {
         setWaitingForHuman(false);
         
         // Add system message for agent joining
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `system-join-${Date.now()}`,
-            sender: "ai",
-            messages: [
-              {
-                id: `system-join-msg-${Date.now()}`,
-                content: "Kelly joined the conversation",
-                timestamp: new Date(),
-              },
-            ],
-          },
-        ]);
+        // This is also now handled with the SystemMessage component
         
         // Show agent typing
         setTimeout(() => {
@@ -169,6 +143,10 @@ const Messenger: React.FC = () => {
           
           {waitingForHuman && (
             <SystemMessage message="Hang tight, we are connecting you…" timestamp={new Date()} />
+          )}
+          
+          {headerState === "human" && !waitingForHuman && !isTyping && messages.some(g => g.sender === "human") && (
+            <SystemMessage message="Kelly joined the conversation" timestamp={new Date()} />
           )}
           
           {isTyping && (
