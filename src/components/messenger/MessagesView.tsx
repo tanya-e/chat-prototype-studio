@@ -62,7 +62,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
       <div className="flex items-center justify-between h-16 px-5 border-b border-messenger-border">
         <h1 className="text-lg font-semibold">Messages</h1>
         <button 
-          className="flex items-center justify-center p-4 pr-8 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
+          className="flex items-center justify-center p-4 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-xl"
           onClick={() => onClose?.()}
           aria-label="Close messages"
           type="button"
