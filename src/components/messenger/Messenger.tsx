@@ -103,14 +103,28 @@ const Messenger: React.FC = () => {
         setHeaderState("human");
         setWaitingForHuman(false);
         
-        // Add system message for agent joining
-        const timestamp = new Date();
+        // First show the system message that Kelly joined
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `system-${Date.now()}`,
+            sender: "system",
+            messages: [
+              {
+                id: `system-msg-${Date.now()}`,
+                content: "Kelly joined the conversation",
+                timestamp: new Date(),
+                type: "human-joined"
+              },
+            ],
+          },
+        ]);
         
-        // Show agent typing
+        // Then show agent typing
         setTimeout(() => {
           setIsTyping(true);
           
-          // Show first message from agent
+          // Finally show first message from agent
           setTimeout(() => {
             setIsTyping(false);
             setMessages((prev) => [
@@ -182,16 +196,17 @@ const Messenger: React.FC = () => {
           className="flex-1 overflow-y-auto p-4"
         >
           {messages.map((group) => (
-            <MessageGroup key={group.id} group={group} />
+            group.sender === "system" ? (
+              <SystemMessage
+                key={group.id}
+                message={group.messages[0].content}
+                timestamp={group.messages[0].timestamp}
+                type="human-joined"
+              />
+            ) : (
+              <MessageGroup key={group.id} group={group} />
+            )
           ))}
-          
-          {headerState === "human" && !waitingForHuman && !isTyping && messages.some(g => g.sender === "human") && (
-            <SystemMessage 
-              message="Kelly joined the conversation" 
-              timestamp={new Date()} 
-              type="human-joined"
-            />
-          )}
           
           {isTyping && (
             <div className="mb-4">
