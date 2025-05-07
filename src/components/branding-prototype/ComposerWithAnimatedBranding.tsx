@@ -33,7 +33,7 @@ const ComposerWithAnimatedBranding: React.FC<ComposerWithAnimatedBrandingProps> 
   };
 
   return (
-    <div className="w-full" style={{ position: 'relative' }}>
+    <div className="w-full" style={{ position: 'relative', minHeight: '50px' }}>
       <MessageComposer 
         onSendMessage={handleSendMessage} 
         shouldAnimate={shouldAnimateComposer} 

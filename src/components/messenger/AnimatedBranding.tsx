@@ -51,10 +51,14 @@ const AnimatedBranding: React.FC<AnimatedBrandingProps> = ({
       }`}
       style={{
         height: isVisible ? 'auto' : '0px',
-        padding: isVisible ? "4px 0 8px" : "0",
+        padding: isVisible ? "4px 0 8px" : "0", 
         overflow: 'hidden',
         margin: 0,
-        position: 'relative'
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: -1
       }}
     >
       <span
