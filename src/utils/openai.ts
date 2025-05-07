@@ -1,5 +1,6 @@
 
 import { toast } from "sonner";
+import { v4 as uuidv4 } from 'uuid';
 
 // Types for OpenAI API requests and responses
 export interface OpenAIMessage {
@@ -25,19 +26,53 @@ export interface OpenAIResponse {
   };
 }
 
-// API key stored in memory (will be replaced with proper secure storage in production)
-let apiKey = "";
+// Secure key storage
+const KEY_PREFIX = "securekey_";
+const SESSION_ID = "session_id";
 
-export const setOpenAIApiKey = (key: string) => {
-  apiKey = key;
-  localStorage.setItem("openai_api_key", key);
+// Generate or retrieve a session ID
+const getSessionId = (): string => {
+  let sessionId = localStorage.getItem(SESSION_ID);
+  if (!sessionId) {
+    sessionId = uuidv4();
+    localStorage.setItem(SESSION_ID, sessionId);
+  }
+  return sessionId;
 };
 
-export const getOpenAIApiKey = () => {
-  if (!apiKey) {
-    apiKey = localStorage.getItem("openai_api_key") || "";
+// Encrypt the API key with a simple encryption (for demonstration purposes)
+const encryptKey = (key: string): string => {
+  const sessionId = getSessionId();
+  // Simple XOR encryption with session ID (not production-grade encryption)
+  return key.split('').map((char, i) => {
+    return String.fromCharCode(char.charCodeAt(0) ^ sessionId.charCodeAt(i % sessionId.length));
+  }).join('');
+};
+
+// Decrypt the API key
+const decryptKey = (encryptedKey: string): string => {
+  const sessionId = getSessionId();
+  // Simple XOR decryption with session ID
+  return encryptedKey.split('').map((char, i) => {
+    return String.fromCharCode(char.charCodeAt(0) ^ sessionId.charCodeAt(i % sessionId.length));
+  }).join('');
+};
+
+export const setOpenAIApiKey = (key: string) => {
+  // Basic validation for OpenAI API key format
+  if (!key.startsWith('sk-') || key.length < 20) {
+    toast.error("Invalid OpenAI API key format");
+    return false;
   }
-  return apiKey;
+  
+  const encryptedKey = encryptKey(key);
+  localStorage.setItem(`${KEY_PREFIX}${getSessionId()}`, encryptedKey);
+  return true;
+};
+
+export const getOpenAIApiKey = (): string => {
+  const encryptedKey = localStorage.getItem(`${KEY_PREFIX}${getSessionId()}`);
+  return encryptedKey ? decryptKey(encryptedKey) : "";
 };
 
 export const hasApiKey = () => {
@@ -101,3 +136,9 @@ export const generateAIResponse = async (
 ): Promise<string | null> => {
   return callOpenAI(conversationHistory);
 };
+
+// Clear the API key
+export const clearApiKey = () => {
+  localStorage.removeItem(`${KEY_PREFIX}${getSessionId()}`);
+};
+
