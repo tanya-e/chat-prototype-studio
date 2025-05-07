@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import MessengerHeader, { HeaderStateType } from "./MessengerHeader";
 import MessageGroup, { MessageGroupType } from "./MessageGroup";
@@ -5,6 +6,9 @@ import TypingIndicator from "./TypingIndicator";
 import MessageComposer from "./MessageComposer";
 import SystemMessage from "./SystemMessage";
 import TeamHandover from "./TeamHandover";
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const initialMessages: MessageGroupType[] = [
   {
@@ -26,6 +30,7 @@ const Messenger: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [headerState, setHeaderState] = useState<HeaderStateType>("ai");
   const [waitingForHuman, setWaitingForHuman] = useState(false);
+  const { toast } = useToast();
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -56,6 +61,18 @@ const Messenger: React.FC = () => {
       // Otherwise, simulate AI response
       simulateAiResponse();
     }
+  };
+
+  const resetConversation = () => {
+    setMessages(initialMessages);
+    setIsTyping(false);
+    setHeaderState("ai");
+    setWaitingForHuman(false);
+    
+    toast({
+      title: "Conversation Reset",
+      description: "The conversation has been reset to the beginning.",
+    });
   };
 
   const triggerHumanHandoff = () => {
@@ -128,7 +145,17 @@ const Messenger: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+      <div className="flex gap-4 mb-4">
+        <Button 
+          variant="outline" 
+          onClick={resetConversation}
+          className="flex gap-2 items-center"
+        >
+          <RotateCcw size={16} />
+          Reset Conversation
+        </Button>
+      </div>
       <div 
         className="w-full max-w-[400px] h-[720px] bg-messenger-base rounded-2xl flex flex-col shadow-xl overflow-hidden"
         style={{
