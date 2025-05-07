@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useConversations } from "../../context/ConversationsContext";
 import { AIAvatar, HumanAvatar } from "../icons/MessengerIcons";
@@ -62,8 +63,8 @@ const MessagesView: React.FC<MessagesViewProps> = ({ onClose }) => {
         <h1 className="text-lg font-semibold">Messages</h1>
         {onClose && (
           <button 
-            className="flex items-center justify-center w-8 h-8 text-messenger-icon-muted hover:bg-messenger-ai-bg rounded-full"
-            onClick={onClose}
+            className="flex items-center justify-center w-8 h-8 text-messenger-icon-muted hover:text-messenger-text-default hover:bg-messenger-ai-bg transition-colors rounded-full"
+            onClick={() => onClose()}
             aria-label="Close messages"
             type="button"
           >

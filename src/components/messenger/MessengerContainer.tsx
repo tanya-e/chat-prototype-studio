@@ -25,6 +25,8 @@ const MessengerContainer: React.FC<MessengerContainerProps> = ({
     trackEvent("messenger_closed");
   };
 
+  console.log("MessengerContainer: isMessengerOpen =", isMessengerOpen, "closeMessenger function:", !!closeMessenger);
+
   return (
     <ConversationsProvider>
       <div className="fixed bottom-4 right-4 flex flex-col items-end justify-end gap-2 z-50">
