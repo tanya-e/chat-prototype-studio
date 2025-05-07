@@ -12,6 +12,8 @@ import { trackEvent } from "@/utils/analytics";
 import { BrandingFlowType } from "@/types/branding-flows";
 import MessagesView from "./MessagesView";
 import { useConversations } from "@/context/ConversationsContext";
+import { hasApiKey, OpenAIMessage, generateAIResponse } from "@/utils/openai";
+import APIKeySetup from "./APIKeySetup";
 
 interface MessengerProps {
   onClose?: () => void;
@@ -50,6 +52,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   const [isScrolled, setIsScrolled] = useState(false);
   const [userMessageSent, setUserMessageSent] = useState(false);
   const [finReplied, setFinReplied] = useState(false);
+  const [apiKeySet, setApiKeySet] = useState(hasApiKey());
   const { toast } = useToast();
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -126,7 +129,17 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
     return () => messagesContainer.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSendMessage = (text: string) => {
+  // Handle API key setup completion
+  const handleApiKeySet = () => {
+    setApiKeySet(true);
+  };
+  
+  // If no API key is set, show the API key setup screen
+  if (!apiKeySet) {
+    return <APIKeySetup onKeySet={handleApiKeySet} />;
+  }
+
+  const handleSendMessage = async (text: string) => {
     if (!activeConversationId) return;
     
     const newUserMessage: MessageGroupType = {
@@ -151,9 +164,65 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
     if (text.toLowerCase().includes("human")) {
       triggerHumanHandoff();
     } else {
-      // Otherwise, simulate AI response
-      simulateAiResponse();
+      // Call OpenAI API for a response
+      await generateAIReply(text);
     }
+  };
+  
+  // New function to generate AI reply using OpenAI
+  const generateAIReply = async (userMessage: string) => {
+    setIsTyping(true);
+    
+    // Convert conversation history to OpenAI format
+    const conversationHistory: OpenAIMessage[] = [
+      { role: "system", content: "You are Fin AI, a helpful AI assistant. Be concise and friendly in your responses." },
+    ];
+    
+    // Add previous messages for context (limit to last 10 messages for token efficiency)
+    const recentMessages = messages.slice(-5).flatMap(group => 
+      group.messages.map(msg => ({
+        role: group.sender === "ai" ? "assistant" : "user" as "assistant" | "user",
+        content: msg.content
+      }))
+    );
+    
+    conversationHistory.push(...recentMessages);
+    
+    // Add the current user message
+    conversationHistory.push({ role: "user", content: userMessage });
+    
+    // Call OpenAI
+    const aiReply = await generateAIResponse(conversationHistory);
+    
+    setIsTyping(false);
+    
+    if (!aiReply) {
+      toast({
+        title: "Error",
+        description: "Failed to generate AI response. Please try again.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const newAiMessage: MessageGroupType = {
+      id: `ai-${Date.now()}`,
+      sender: "ai",
+      showAvatar: true,
+      messages: [
+        {
+          id: `ai-msg-${Date.now()}`,
+          content: aiReply,
+          timestamp: new Date(),
+        },
+      ],
+    };
+    
+    setMessages((prev) => [...prev, newAiMessage]);
+    addMessageToConversation(activeConversationId, newAiMessage);
+    
+    // Track that Fin has replied for branding flow
+    setFinReplied(true);
   };
 
   const resetConversation = () => {
@@ -235,35 +304,6 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         }, 2000); // Show typing for 2 seconds
       }, 500); // Wait 0.5s after system message before typing
     }, 2000); // Show handover pill for 2 seconds
-  };
-
-  const simulateAiResponse = () => {
-    if (!activeConversationId) return;
-    
-    setIsTyping(true);
-    
-    setTimeout(() => {
-      setIsTyping(false);
-      
-      const newAiMessage: MessageGroupType = {
-        id: `ai-${Date.now()}`,
-        sender: "ai",
-        showAvatar: true,
-        messages: [
-          {
-            id: `ai-msg-${Date.now()}`,
-            content: "I understand your question. Let me help you with that. Is there anything specific you'd like to know?",
-            timestamp: new Date(),
-          },
-        ],
-      };
-      
-      setMessages((prev) => [...prev, newAiMessage]);
-      addMessageToConversation(activeConversationId, newAiMessage);
-      
-      // Track that Fin has replied for branding flow
-      setFinReplied(true);
-    }, 1500);
   };
 
   // Function to interleave messages and system messages for display
