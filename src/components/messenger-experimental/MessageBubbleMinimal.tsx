@@ -58,16 +58,19 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
       </div>
 
       {/* Message details container with negative margin to account for proper spacing */}
-      <div className={`flex px-4 pt-[3px] items-center gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'} h-[16px] -mb-4`}>
-        {showDetails && (
-          <>
-            <span className="text-[#A3A3A3] text-[12px] font-normal">{senderName}</span>
-            {/* Only show timestamp for non-user messages */}
-            {!isUser && (
-              <span className="text-[#A3A3A3] text-[12px] font-normal">{formattedTime}</span>
-            )}
-          </>
-        )}
+      <div className={`flex px-4 pt-[3px] items-center gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'} h-[16px] -mb-4 relative`}>
+        <div 
+          className={`flex items-center gap-2 absolute ${isUser ? 'right-4' : 'left-4'} transform transition-all duration-200 ease-in-out ${
+            showDetails 
+              ? 'opacity-100 translate-y-0' 
+              : 'opacity-0 -translate-y-1 pointer-events-none'
+          }`}
+        >
+          {/* Only show sender name for non-user messages */}
+          {!isUser && <span className="text-[#A3A3A3] text-[12px] font-normal">{senderName}</span>}
+          {/* Only show timestamp for non-user messages */}
+          {!isUser && <span className="text-[#A3A3A3] text-[12px] font-normal">{formattedTime}</span>}
+        </div>
       </div>
     </div>
   );
