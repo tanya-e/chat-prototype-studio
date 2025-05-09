@@ -97,7 +97,7 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
   
   return (
     <div className="w-full mb-0">
-      <div className="w-full bg-gradient-to-t from-messenger-base/95 via-messenger-base/80 to-transparent">
+      <div className="w-full composer-gradient backdrop-blur-sm">
         <form onSubmit={handleSubmit} className="w-full py-[16px]">
           <div 
             ref={containerRef}

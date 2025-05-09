@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -192,11 +193,19 @@
   
   /* Updated nav gradient without blur effect and transparent bottom edge */
   .nav-gradient {
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 30%, rgba(255, 255, 255, 0.9) 60%, #FFFFFF 100%);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 30%, rgba(255, 255, 255, 0.95) 70%, #FFFFFF 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     height: 70px;
     border-bottom: none;
+  }
+  
+  /* Composer gradient with similar effect as nav gradient */
+  .composer-gradient {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 30%, rgba(255, 255, 255, 0.95) 70%, #FFFFFF 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: none;
   }
   
   /* Custom navbar gradient for dark mode with progressive blur */
@@ -209,8 +218,16 @@
   /* Updated nav gradient for dark mode without blur effect and transparent bottom edge */
   .dark .nav-gradient {
     background: linear-gradient(0deg, rgba(28, 28, 28, 0) 0%, rgba(28, 28, 28, 0.3) 30%, rgba(28, 28, 28, 0.9) 60%, #1C1C1C 100%);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: none;
+  }
+  
+  /* Composer gradient for dark mode */
+  .dark .composer-gradient {
+    background: linear-gradient(180deg, rgba(28, 28, 28, 0) 0%, rgba(28, 28, 28, 0.3) 30%, rgba(28, 28, 28, 0.9) 60%, #1C1C1C 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: none;
   }
 }
