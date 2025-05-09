@@ -30,7 +30,7 @@ const NavBarMinimal: React.FC<NavBarMinimalProps> = ({ headerState, onClose, onB
     <div className="absolute top-0 left-0 right-0 flex w-full px-4 py-3 justify-between items-center navbar-custom-gradient z-10">
       {/* Back button */}
       <button 
-        className="flex p-2 items-center gap-2 rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)]"
+        className="flex p-2 items-center gap-2 rounded-full bg-white/80 shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)] dark:bg-gray-800/80"
         onClick={handleBack}
       >
         <ChevronLeft size={20} className="text-messenger-icon-muted" />
@@ -56,12 +56,12 @@ const NavBarMinimal: React.FC<NavBarMinimalProps> = ({ headerState, onClose, onB
 
       {/* Right actions */}
       <div className="flex items-center gap-2">
-        <button className="flex p-2 items-center gap-2 rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)]">
+        <button className="flex p-2 items-center gap-2 rounded-full bg-white/80 shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)] dark:bg-gray-800/80">
           <MoreHorizontal size={20} className="text-messenger-icon-muted" />
         </button>
         {onClose && (
           <button 
-            className="flex p-2 items-center gap-2 rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)]"
+            className="flex p-2 items-center gap-2 rounded-full bg-white/80 shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)] dark:bg-gray-800/80"
             onClick={handleClose}
           >
             <X size={20} className="text-messenger-icon-muted" />
