@@ -62,7 +62,10 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
         {showDetails && (
           <>
             <span className="text-[#A3A3A3] text-[12px] font-normal">{senderName}</span>
-            <span className="text-[#A3A3A3] text-[12px] font-normal">{formattedTime}</span>
+            {/* Only show timestamp for non-user messages */}
+            {!isUser && (
+              <span className="text-[#A3A3A3] text-[12px] font-normal">{formattedTime}</span>
+            )}
           </>
         )}
       </div>
