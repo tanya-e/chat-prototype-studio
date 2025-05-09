@@ -49,8 +49,8 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({ onSendMessage }) =>
   };
 
   return (
-    <div className="w-full mb-4">
-      <div className="w-full pb-4 bg-gradient-to-t from-messenger-base/95 via-messenger-base/80 to-transparent">
+    <div className="w-full mb-0">
+      <div className="w-full bg-gradient-to-t from-messenger-base/95 via-messenger-base/80 to-transparent">
         <form onSubmit={handleSubmit} className="w-full">
           <div className="w-[360px] mx-auto px-[14px] py-[12px] pr-[8px] flex justify-between items-start rounded-[22px] border border-[#F5F5F5] bg-white shadow-[0px_0px_4px_0px_rgba(15,15,15,0.16)]">
             <div className="flex flex-col items-start gap-2 flex-1">

@@ -307,7 +307,7 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
       {/* Messages section */}
       <div 
         ref={messagesContainerRef} 
-        className="flex-1 overflow-y-auto p-4"
+        className="flex-1 overflow-y-auto p-4 pb-0"
       >
         {variant === "classic" ? (
           // Classic message rendering
@@ -376,16 +376,18 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
       )}
       
       {/* Composer based on variant */}
-      {variant === "classic" ? (
-        <ComposerWithAnimatedBranding 
-          onSendMessage={handleSendMessage} 
-          flowType={flowType}
-          finReplied={finReplied}
-          userMessageSent={userMessageSent}
-        />
-      ) : (
-        <ComposerExpanded onSendMessage={handleSendMessage} />
-      )}
+      <div className="mt-auto">
+        {variant === "classic" ? (
+          <ComposerWithAnimatedBranding 
+            onSendMessage={handleSendMessage} 
+            flowType={flowType}
+            finReplied={finReplied}
+            userMessageSent={userMessageSent}
+          />
+        ) : (
+          <ComposerExpanded onSendMessage={handleSendMessage} />
+        )}
+      </div>
     </div>
   );
 };
