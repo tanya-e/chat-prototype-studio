@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { Smile, Gift, Paperclip, ArrowUp } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -97,7 +96,7 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
   
   return (
     <div className="w-full mb-0 relative">
-      <div className="w-full absolute bottom-0 left-0 right-0 composer-gradient backdrop-blur-sm">
+      <div className="w-full absolute bottom-0 left-0 right-0 composer-gradient">
         <form onSubmit={handleSubmit} className="w-full py-[16px]">
           <div 
             ref={containerRef}

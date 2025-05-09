@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -191,20 +190,16 @@
     height: 70px;
   }
   
-  /* Updated nav gradient without blur effect and transparent bottom edge */
+  /* Updated nav gradient without blur effect and enhanced gradient */
   .nav-gradient {
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 30%, rgba(255, 255, 255, 0.95) 70%, #FFFFFF 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 20%, rgba(255, 255, 255, 0.95) 50%, #FFFFFF 75%);
     height: 70px;
     border-bottom: none;
   }
   
-  /* Composer gradient with similar effect as nav gradient */
+  /* Composer gradient with similar effect as nav gradient but flipped */
   .composer-gradient {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 30%, rgba(255, 255, 255, 0.95) 70%, #FFFFFF 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 20%, rgba(255, 255, 255, 0.95) 50%, #FFFFFF 75%);
     border-top: none;
   }
   
@@ -215,19 +210,15 @@
     -webkit-backdrop-filter: blur(12px);
   }
   
-  /* Updated nav gradient for dark mode without blur effect and transparent bottom edge */
+  /* Updated nav gradient for dark mode without blur effect and enhanced gradient */
   .dark .nav-gradient {
-    background: linear-gradient(0deg, rgba(28, 28, 28, 0) 0%, rgba(28, 28, 28, 0.3) 30%, rgba(28, 28, 28, 0.9) 60%, #1C1C1C 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(0deg, rgba(28, 28, 28, 0) 0%, rgba(28, 28, 28, 0.7) 20%, rgba(28, 28, 28, 0.95) 50%, #1C1C1C 75%);
     border-bottom: none;
   }
   
-  /* Composer gradient for dark mode */
+  /* Composer gradient for dark mode with enhanced gradient */
   .dark .composer-gradient {
-    background: linear-gradient(180deg, rgba(28, 28, 28, 0) 0%, rgba(28, 28, 28, 0.3) 30%, rgba(28, 28, 28, 0.9) 60%, #1C1C1C 100%);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: linear-gradient(180deg, rgba(28, 28, 28, 0) 0%, rgba(28, 28, 28, 0.7) 20%, rgba(28, 28, 28, 0.95) 50%, #1C1C1C 75%);
     border-top: none;
   }
 }
