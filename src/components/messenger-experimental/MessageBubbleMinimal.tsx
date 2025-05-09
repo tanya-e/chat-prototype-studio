@@ -60,10 +60,10 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
       {/* Message details container with negative margin to account for proper spacing */}
       <div className={`flex px-4 pt-[3px] items-center gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'} h-[16px] -mb-4 relative`}>
         <div 
-          className={`flex items-center gap-2 absolute ${isUser ? 'right-4' : 'left-4'} transform transition-all duration-200 ease-out ${
+          className={`flex items-center gap-2 absolute ${isUser ? 'right-4' : 'left-4'} transition-opacity duration-200 ease-out ${
             showDetails 
-              ? 'opacity-100 translate-x-0' 
-              : 'opacity-0 -translate-x-1 pointer-events-none'
+              ? 'opacity-100' 
+              : 'opacity-0 pointer-events-none'
           }`}
         >
           {/* Only show sender name for non-user messages */}
