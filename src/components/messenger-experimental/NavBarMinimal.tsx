@@ -27,7 +27,7 @@ const NavBarMinimal: React.FC<NavBarMinimalProps> = ({ headerState, onClose, onB
   };
 
   return (
-    <div className="flex w-[400px] px-4 py-3 justify-between items-center bg-gradient-to-b from-transparent via-white/30 to-white/80 backdrop-blur-[2px] sticky top-0 z-10">
+    <div className="flex w-[400px] px-4 py-3 justify-between items-center bg-gradient-to-t from-transparent to-white sticky top-0 z-10">
       {/* Back button */}
       <button 
         className="flex p-2 items-center gap-2 rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)]"
