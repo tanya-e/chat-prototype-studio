@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, MouseEvent, useEffect } from "react";
 import { SmallAIAvatar, SmallHumanAvatar } from "../icons/MessengerIcons";
 import { cn } from "@/lib/utils";
@@ -29,6 +28,7 @@ interface MessageProps {
 
 const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = true }) => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [showTimestamp, setShowTimestamp] = useState(false);
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isUser = message.sender === "user";
   const formattedTime = message.timestamp.toLocaleTimeString([], {
@@ -44,11 +44,9 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
     if (hoverTimerRef.current) {
       clearTimeout(hoverTimerRef.current);
     }
-    // Timestamp display has been disabled as requested
-    // The timer setup is kept for easy re-enabling
-    // hoverTimerRef.current = setTimeout(() => {
-    //   setShowTimestamp(true);
-    // }, 500);
+    hoverTimerRef.current = setTimeout(() => {
+      setShowTimestamp(true);
+    }, 300);
   };
 
   const handleMouseLeave = () => {
@@ -56,8 +54,7 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
       clearTimeout(hoverTimerRef.current);
       hoverTimerRef.current = null;
     }
-    // Timestamp hiding code kept for structure
-    // setShowTimestamp(false);
+    setShowTimestamp(false);
   };
 
   useEffect(() => {
@@ -68,10 +65,11 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
     };
   }, []);
 
+  // Keep consistent spacing with minimal version by adding a details area with fixed height
   if (isUser) {
     return (
       <div
-        className="flex flex-col items-end mb-1 relative"
+        className="flex flex-col items-end relative"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onMouseMove={handleMouseMove}
@@ -79,7 +77,13 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
         <div className="max-w-xs md:max-w-[260px] px-4 py-3 rounded-[20px] bg-messenger-customer-bg text-messenger-customer-text">
           {message.content}
         </div>
-        {/* Timestamp has been removed but structure kept for future use */}
+        <div className="h-[16px] -mb-4">
+          {showTimestamp && (
+            <div className="flex px-4 pt-[3px] justify-end">
+              <span className="text-[#A3A3A3] text-[12px] font-normal">{formattedTime}</span>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -88,7 +92,7 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
 
   return (
     <div
-      className="flex flex-col items-start mb-1 relative"
+      className="flex flex-col items-start relative"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
@@ -104,7 +108,13 @@ const Message: React.FC<MessageProps> = ({ message, isLastInGroup, showAvatar = 
         )}
         {message.content}
       </div>
-      {/* Timestamp has been removed but structure kept for future use */}
+      <div className="h-[16px] -mb-4">
+        {showTimestamp && (
+          <div className="flex px-4 pt-[3px]">
+            <span className="text-[#A3A3A3] text-[12px] font-normal">{formattedTime}</span>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,16 +1,22 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { MessageType } from "../messenger/Message";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
 
 interface MessageBubbleMinimalProps {
   message: MessageType;
 }
 
 const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) => {
-  const [showTimestamp, setShowTimestamp] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isUser = message.sender === "user";
-  const senderName = message.sender === "ai" ? "Fin" : message.sender === "human" ? "Kelly" : "";
+  const senderName = message.sender === "ai" ? "Fin" : message.sender === "human" ? "Kelly" : "You";
   const formattedTime = message.timestamp.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -21,7 +27,7 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
       clearTimeout(hoverTimerRef.current);
     }
     hoverTimerRef.current = setTimeout(() => {
-      setShowTimestamp(true);
+      setShowDetails(true);
     }, 300);
   };
 
@@ -30,7 +36,7 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
       clearTimeout(hoverTimerRef.current);
       hoverTimerRef.current = null;
     }
-    setShowTimestamp(false);
+    setShowDetails(false);
   };
 
   useEffect(() => {
@@ -43,22 +49,23 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
 
   return (
     <div 
-      className="flex flex-col w-[368px] justify-center items-start"
+      className={`flex flex-col w-[368px] justify-center ${isUser ? 'items-end' : 'items-start'}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className={`max-w-[320px] p-4 flex flex-col items-start gap-2 rounded-[20px] ${isUser ? 'bg-messenger-customer-bg text-messenger-customer-text self-end' : 'bg-[#F5F5F5] text-messenger-text-default'}`}>
+      <div className={`max-w-[320px] p-4 flex flex-col items-start gap-2 rounded-[20px] ${isUser ? 'bg-messenger-customer-bg text-messenger-customer-text' : 'bg-[#F5F5F5] text-messenger-text-default'}`}>
         {message.content}
       </div>
 
-      {!isUser && (
-        <div className="flex px-4 pt-[3px] items-center gap-2 w-full">
-          <span className="text-[#A3A3A3] text-[12px] font-normal">{senderName}</span>
-          {showTimestamp && (
+      {/* Message details container with negative margin to account for proper spacing */}
+      <div className={`flex px-4 pt-[3px] items-center gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'} h-[16px] -mb-4`}>
+        {showDetails && (
+          <>
+            <span className="text-[#A3A3A3] text-[12px] font-normal">{senderName}</span>
             <span className="text-[#A3A3A3] text-[12px] font-normal">{formattedTime}</span>
-          )}
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   );
 };
