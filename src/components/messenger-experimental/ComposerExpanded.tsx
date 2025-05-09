@@ -1,15 +1,39 @@
-import React, { useState } from "react";
+
+import React, { useState, useRef, useEffect } from "react";
 import { Smile, Gift, Paperclip, ArrowUp } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { trackEvent } from "@/utils/analytics";
+import { cn } from "@/lib/utils";
+
 interface ComposerExpandedProps {
   onSendMessage: (text: string) => void;
 }
+
 const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
   onSendMessage
 }) => {
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [hasText, setHasText] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Adjust height of textarea as user types
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    // Reset height before calculating the new height
+    textarea.style.height = "auto";
+    
+    // Calculate new height but cap it at approximately 10 lines
+    // Assuming line-height of 20px, 10 lines would be ~200px + padding
+    const maxHeight = 200; // approximately 10 lines
+    const scrollHeight = textarea.scrollHeight;
+    
+    textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+  }, [message]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim()) {
@@ -25,11 +49,13 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
       });
     }
   };
+  
   const handleInputFocus = () => {
     setIsActive(true);
     trackEvent("composer_focused");
   };
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
     setMessage(newValue);
     const hasContent = newValue.trim() !== "";
@@ -42,12 +68,27 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
       trackEvent("composer_cleared");
     }
   };
-  return <div className="w-full mb-0">
+  
+  return (
+    <div className="w-full mb-0">
       <div className="w-full bg-gradient-to-t from-messenger-base/95 via-messenger-base/80 to-transparent">
         <form onSubmit={handleSubmit} className="w-full py-[16px]">
-          <div className="w-[360px] mx-auto px-[14px] py-[12px] pr-[8px] flex justify-between items-start rounded-[22px] border border-[#F5F5F5] bg-white shadow-[0px_0px_4px_0px_rgba(15,15,15,0.16)]">
-            <div className="flex flex-col items-start gap-2 flex-1">
-              <input type="text" placeholder="Ask your question..." className="w-full flex-1 bg-transparent border-none focus:outline-none text-[14px] font-normal leading-[20px] text-messenger-text-default placeholder:text-messenger-text-muted" value={message} onChange={handleInputChange} onFocus={handleInputFocus} />
+          <div className="w-[360px] mx-auto px-[14px] py-[12px] pr-[8px] flex flex-col justify-between rounded-[22px] border border-[#F5F5F5] bg-white shadow-[0px_0px_4px_0px_rgba(15,15,15,0.16)]">
+            <div className="flex flex-col w-full">
+              <Textarea
+                ref={textareaRef}
+                placeholder="Ask your question..."
+                className={cn(
+                  "w-full flex-1 bg-transparent border-none resize-none focus:outline-none text-[14px] font-normal leading-[20px] text-messenger-text-default placeholder:text-messenger-text-muted p-0 min-h-[20px] max-h-[200px]",
+                  message.length > 0 ? "mb-2" : ""
+                )}
+                value={message}
+                onChange={handleInputChange}
+                onFocus={handleInputFocus}
+                style={{
+                  overflowY: textareaRef.current && textareaRef.current.scrollHeight > 200 ? 'auto' : 'hidden'
+                }}
+              />
               <div className="flex justify-between items-end w-full">
                 <div className="flex items-center gap-4 pb-1">
                   <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
@@ -70,6 +111,8 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
           </div>
         </form>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default ComposerExpanded;
