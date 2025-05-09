@@ -184,7 +184,7 @@
   
   /* Custom navbar gradient with progressive blur */
   .navbar-custom-gradient {
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 20%, rgba(255, 255, 255, 0.9) 60%, #FFFFFF 100%);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 0.9) 60%, #FFFFFF 100%);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     height: 70px;
@@ -192,7 +192,7 @@
   
   /* Updated nav gradient without blur effect and enhanced gradient */
   .nav-gradient {
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 20%, rgba(255, 255, 255, 0.95) 50%, #FFFFFF 75%);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 20%, rgba(255, 255, 255, 0.95) 50%, #FFFFFF 75%);
     height: 70px;
     border-bottom: none;
   }
