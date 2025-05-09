@@ -307,7 +307,7 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
       {/* Messages section */}
       <div 
         ref={messagesContainerRef} 
-        className="flex-1 overflow-y-auto p-4 pb-0"
+        className={`flex-1 overflow-y-auto p-4 pb-0 ${variant === 'experimental' ? 'pt-[94px]' : 'pt-4'}`}
       >
         {variant === "classic" ? (
           // Classic message rendering
