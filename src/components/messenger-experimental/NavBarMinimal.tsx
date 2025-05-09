@@ -27,7 +27,7 @@ const NavBarMinimal: React.FC<NavBarMinimalProps> = ({ headerState, onClose, onB
   };
 
   return (
-    <div className="flex w-[400px] px-4 py-3 justify-between items-center bg-gradient-to-b from-messenger-base via-messenger-base to-transparent">
+    <div className="flex w-[400px] px-4 py-3 justify-between items-center bg-gradient-to-b from-messenger-base/95 via-messenger-base/80 to-transparent sticky top-0 z-10">
       {/* Back button */}
       <button 
         className="flex p-2 items-center gap-2 rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)]"
@@ -36,8 +36,8 @@ const NavBarMinimal: React.FC<NavBarMinimalProps> = ({ headerState, onClose, onB
         <ChevronLeft size={20} className="text-messenger-icon-muted" />
       </button>
 
-      {/* Center avatar */}
-      <div className="flex items-center justify-center">
+      {/* Center avatar - using absolute positioning for true center */}
+      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
         {headerState === "ai" && (
           <div className="flex w-8 h-8">
             <AIAvatar />
