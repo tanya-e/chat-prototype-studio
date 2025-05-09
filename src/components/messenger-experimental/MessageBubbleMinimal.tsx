@@ -49,7 +49,7 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
 
   return (
     <div 
-      className={`flex flex-col w-[368px] justify-center ${isUser ? 'items-end' : 'items-start'}`}
+      className={`flex flex-col w-[368px] justify-center ${isUser ? 'items-end' : 'items-start'} mb-5`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

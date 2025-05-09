@@ -341,7 +341,7 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
               } else {
                 const group = item as MessageGroupType;
                 return (
-                  <div key={group.id} className={`flex mb-4 ${group.sender === "user" ? "justify-end" : "justify-start"}`}>
+                  <div key={group.id} className="flex">
                     {group.messages.map((msg) => (
                       <MessageBubbleMinimal 
                         key={msg.id} 
@@ -361,7 +361,7 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
         )}
         
         {isTyping && (
-          <div className="mb-4">
+          <div className="mb-5">
             <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "Fin" : "Kelly"} />
           </div>
         )}
