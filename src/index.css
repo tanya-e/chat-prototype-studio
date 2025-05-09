@@ -186,11 +186,13 @@
   /* Custom navbar gradient */
   .navbar-custom-gradient {
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.00) 0%, #FFF 47.5%);
+    backdrop-filter: blur(4px);
+    height: 70px;
   }
   
   /* Custom navbar gradient for dark mode */
   .dark .navbar-custom-gradient {
     background: linear-gradient(0deg, rgba(28, 28, 28, 0.00) 0%, #1C1C1C 47.5%);
+    backdrop-filter: blur(4px);
   }
 }
-
