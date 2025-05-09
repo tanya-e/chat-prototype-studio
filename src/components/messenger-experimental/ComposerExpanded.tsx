@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Smile, Gif, Paperclip, ArrowUp } from "lucide-react";
+import { Smile, Gift, Paperclip, ArrowUp } from "lucide-react";
 import { trackEvent } from "@/utils/analytics";
 
 interface ComposerExpandedProps {
@@ -67,7 +67,7 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({ onSendMessage }) =>
                   <Smile size={16} />
                 </button>
                 <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
-                  <Gif size={16} />
+                  <Gift size={16} />
                 </button>
                 <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
                   <Paperclip size={16} />
