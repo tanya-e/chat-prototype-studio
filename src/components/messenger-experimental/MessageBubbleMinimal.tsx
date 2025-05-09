@@ -53,18 +53,15 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className={`max-w-[320px] p-4 flex flex-col items-start gap-2 rounded-[20px] transition-all duration-300 ease-in-out ${isUser ? 'bg-messenger-customer-bg text-messenger-customer-text hover:shadow-sm' : 'bg-[#F5F5F5] text-messenger-text-default hover:bg-[#EFEFEF]'}`}>
+      <div className={`max-w-[320px] p-4 flex flex-col items-start gap-2 rounded-[20px] ${isUser ? 'bg-messenger-customer-bg text-messenger-customer-text' : 'bg-[#F5F5F5] text-messenger-text-default'}`}>
         {message.content}
       </div>
 
       {/* Message details container with negative margin to account for proper spacing */}
-      <div className={`flex px-4 pt-[3px] items-center gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'} h-[16px] -mb-4 transition-opacity duration-300 ${showDetails ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`flex px-4 pt-[3px] items-center gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'} h-[16px] -mb-4`}>
         {showDetails && (
           <>
-            {/* Only show sender name for non-user messages */}
-            {!isUser && (
-              <span className="text-[#A3A3A3] text-[12px] font-normal">{senderName}</span>
-            )}
+            <span className="text-[#A3A3A3] text-[12px] font-normal">{senderName}</span>
             {/* Only show timestamp for non-user messages */}
             {!isUser && (
               <span className="text-[#A3A3A3] text-[12px] font-normal">{formattedTime}</span>
