@@ -63,7 +63,7 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
           className={`flex items-center gap-2 absolute ${isUser ? 'right-4' : 'left-4'} transform transition-all duration-200 ease-out ${
             showDetails 
               ? 'opacity-100 translate-x-0' 
-              : 'opacity-0 -translate-x-4 pointer-events-none'
+              : 'opacity-0 -translate-x-2 pointer-events-none'
           }`}
         >
           {/* Only show sender name for non-user messages */}
