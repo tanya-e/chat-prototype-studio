@@ -49,43 +49,45 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({ onSendMessage }) =>
   };
 
   return (
-    <div className="w-full">
-      <form onSubmit={handleSubmit} className="w-full">
-        <div className="w-[360px] mx-auto px-[14px] py-[12px] pr-[8px] flex justify-between items-start rounded-[22px] border border-[#F5F5F5] bg-white shadow-[0px_0px_4px_0px_rgba(15,15,15,0.16)]">
-          <div className="flex flex-col items-start gap-2 flex-1">
-            <input
-              type="text"
-              placeholder="Ask your question..."
-              className="w-full flex-1 bg-transparent border-none focus:outline-none text-[14px] font-normal leading-[20px] text-messenger-text-default placeholder:text-messenger-text-muted"
-              value={message}
-              onChange={handleInputChange}
-              onFocus={handleInputFocus}
-            />
-            <div className="flex justify-between items-end w-full">
-              <div className="flex items-center gap-4 pb-1">
-                <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
-                  <Smile size={16} />
-                </button>
-                <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
-                  <Gift size={16} />
-                </button>
-                <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
-                  <Paperclip size={16} />
-                </button>
-              </div>
-              <div className="flex items-center">
-                <button 
-                  type={hasText ? "submit" : "button"}
-                  disabled={!hasText}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${hasText ? 'bg-messenger-customer-bg' : 'bg-[#F5F5F5]'}`}
-                >
-                  <ArrowUp size={16} className={hasText ? 'text-messenger-customer-text' : 'text-messenger-icon-muted'} />
-                </button>
+    <div className="w-full mb-4">
+      <div className="w-full pb-4 bg-gradient-to-t from-messenger-base/95 via-messenger-base/80 to-transparent">
+        <form onSubmit={handleSubmit} className="w-full">
+          <div className="w-[360px] mx-auto px-[14px] py-[12px] pr-[8px] flex justify-between items-start rounded-[22px] border border-[#F5F5F5] bg-white shadow-[0px_0px_4px_0px_rgba(15,15,15,0.16)]">
+            <div className="flex flex-col items-start gap-2 flex-1">
+              <input
+                type="text"
+                placeholder="Ask your question..."
+                className="w-full flex-1 bg-transparent border-none focus:outline-none text-[14px] font-normal leading-[20px] text-messenger-text-default placeholder:text-messenger-text-muted"
+                value={message}
+                onChange={handleInputChange}
+                onFocus={handleInputFocus}
+              />
+              <div className="flex justify-between items-end w-full">
+                <div className="flex items-center gap-4 pb-1">
+                  <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
+                    <Smile size={16} />
+                  </button>
+                  <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
+                    <Gift size={16} />
+                  </button>
+                  <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
+                    <Paperclip size={16} />
+                  </button>
+                </div>
+                <div className="flex items-center">
+                  <button 
+                    type={hasText ? "submit" : "button"}
+                    disabled={!hasText}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center ${hasText ? 'bg-messenger-customer-bg' : 'bg-[#F5F5F5]'}`}
+                  >
+                    <ArrowUp size={16} className={hasText ? 'text-messenger-customer-text' : 'text-messenger-icon-muted'} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };
