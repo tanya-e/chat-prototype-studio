@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { Smile, Gift, Paperclip, ArrowUp } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -16,7 +16,9 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
   const [message, setMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
   const [hasText, setHasText] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Adjust height of textarea as user types
   useEffect(() => {
@@ -52,7 +54,31 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
   
   const handleInputFocus = () => {
     setIsActive(true);
+    setIsFocused(true);
     trackEvent("composer_focused");
+  };
+
+  const handleInputBlur = () => {
+    setIsFocused(false);
+  };
+
+  const handleContainerClick = () => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  };
+  
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    // Enter key sends message, Shift+Enter adds line break
+    if (e.key === 'Enter') {
+      if (!e.shiftKey) {
+        e.preventDefault();
+        if (message.trim()) {
+          handleSubmit(e);
+        }
+      }
+      // Shift+Enter does nothing here, allowing default textarea behavior (new line)
+    }
   };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -73,7 +99,16 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
     <div className="w-full mb-0">
       <div className="w-full bg-gradient-to-t from-messenger-base/95 via-messenger-base/80 to-transparent">
         <form onSubmit={handleSubmit} className="w-full py-[16px]">
-          <div className="w-[360px] mx-auto px-[14px] py-[12px] pr-[8px] flex flex-col justify-between rounded-[22px] border border-[#F5F5F5] bg-white shadow-[0px_0px_4px_0px_rgba(15,15,15,0.16)]">
+          <div 
+            ref={containerRef}
+            onClick={handleContainerClick}
+            className={cn(
+              "w-[360px] mx-auto px-[14px] py-[12px] pr-[8px] flex flex-col justify-between rounded-[22px] border bg-white shadow-[0px_0px_4px_0px_rgba(15,15,15,0.16)] transition-colors",
+              isFocused 
+                ? "border-messenger-composer-border" 
+                : "border-[#F5F5F5]"
+            )}
+          >
             <div className="flex flex-col w-full">
               <Textarea
                 ref={textareaRef}
@@ -85,6 +120,8 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
                 value={message}
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+                onKeyDown={handleKeyDown}
                 style={{
                   overflowY: textareaRef.current && textareaRef.current.scrollHeight > 200 ? 'auto' : 'hidden'
                 }}
