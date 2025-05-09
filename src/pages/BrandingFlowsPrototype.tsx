@@ -25,6 +25,9 @@ const BrandingFlowsPrototype: React.FC = () => {
             <Link to="/" className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
               Back to Home
             </Link>
+            <Link to="/messenger-ui-experiments" className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+              UI Experiments
+            </Link>
             <button onClick={toggleTheme} className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg">
               Toggle {theme === "light" ? "Dark" : "Light"} Mode
             </button>

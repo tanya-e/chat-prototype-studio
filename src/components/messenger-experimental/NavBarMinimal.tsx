@@ -1,0 +1,75 @@
+
+import React from "react";
+import { ChevronLeft, MoreHorizontal, X } from "lucide-react";
+import { AIAvatar, HumanAvatar, UnassignedAvatars } from "../icons/MessengerIcons";
+import { trackEvent } from "@/utils/analytics";
+import { HeaderStateType } from "../messenger/MessengerHeader";
+
+interface NavBarMinimalProps {
+  headerState: HeaderStateType;
+  onClose?: () => void;
+  onBack?: () => void;
+}
+
+const NavBarMinimal: React.FC<NavBarMinimalProps> = ({ headerState, onClose, onBack }) => {
+  const handleClose = () => {
+    if (onClose) {
+      trackEvent("messenger_close_clicked");
+      onClose();
+    }
+  };
+
+  const handleBack = () => {
+    if (onBack) {
+      trackEvent("messenger_back_clicked");
+      onBack();
+    }
+  };
+
+  return (
+    <div className="flex w-[400px] px-4 py-3 justify-between items-center bg-gradient-to-b from-messenger-base via-messenger-base to-transparent">
+      {/* Back button */}
+      <button 
+        className="flex p-2 items-center gap-2 rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)]"
+        onClick={handleBack}
+      >
+        <ChevronLeft size={20} className="text-messenger-icon-muted" />
+      </button>
+
+      {/* Center avatar */}
+      <div className="flex items-center justify-center">
+        {headerState === "ai" && (
+          <div className="flex w-8 h-8">
+            <AIAvatar />
+          </div>
+        )}
+        {headerState === "unassigned" && (
+          <UnassignedAvatars />
+        )}
+        {headerState === "human" && (
+          <div className="relative w-8 h-8">
+            <HumanAvatar />
+            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border border-white"></span>
+          </div>
+        )}
+      </div>
+
+      {/* Right actions */}
+      <div className="flex items-center gap-2">
+        <button className="flex p-2 items-center gap-2 rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)]">
+          <MoreHorizontal size={20} className="text-messenger-icon-muted" />
+        </button>
+        {onClose && (
+          <button 
+            className="flex p-2 items-center gap-2 rounded-full bg-white shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)]"
+            onClick={handleClose}
+          >
+            <X size={20} className="text-messenger-icon-muted" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default NavBarMinimal;

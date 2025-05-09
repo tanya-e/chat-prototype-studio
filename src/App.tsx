@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import DesignTokens from "./pages/DesignTokens";
 import NotFound from "./pages/NotFound";
 import BrandingFlowsPrototype from "./pages/BrandingFlowsPrototype";
+import MessengerUIExperiments from "./pages/MessengerUIExperiments";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/design-tokens" element={<DesignTokens />} />
           <Route path="/branding-flows" element={<BrandingFlowsPrototype />} />
+          <Route path="/messenger-ui-experiments" element={<MessengerUIExperiments />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
