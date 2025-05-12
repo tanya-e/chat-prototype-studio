@@ -115,7 +115,7 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
                 placeholder="Ask your question..."
                 className={cn(
                   "w-full flex-1 bg-transparent border-none resize-none text-[14px] font-normal leading-[20px] text-messenger-text-default placeholder:text-messenger-text-muted p-0 min-h-[20px] max-h-[200px]",
-                  message.length > 0 ? "mb-2" : ""
+                  message.length > 0 ? "mb-1" : "" // Reduced mb-2 to mb-1 to decrease the gap
                 )}
                 value={message}
                 onChange={handleInputChange}
@@ -127,7 +127,7 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
                   outline: 'none' // Remove the outline when focused
                 }}
               />
-              <div className="flex justify-between items-end w-full">
+              <div className="flex justify-between items-end w-full mt-1"> {/* Added mt-1 to create a consistent 2px gap */}
                 <div className="flex items-center gap-4 pb-1">
                   <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
                     <Smile size={16} />
