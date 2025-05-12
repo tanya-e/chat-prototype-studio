@@ -20,20 +20,24 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Adjust height of textarea as user types
+  // Initialize textarea height on component mount and adjust as text changes
   useEffect(() => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
-    // Reset height before calculating the new height
-    textarea.style.height = "auto";
+    // Set initial height to match a single line
+    textarea.style.height = "20px"; // Single line height
     
-    // Calculate new height but cap it at approximately 10 lines
-    // Assuming line-height of 20px, 10 lines would be ~200px + padding
-    const maxHeight = 200; // approximately 10 lines
-    const scrollHeight = textarea.scrollHeight;
-    
-    textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+    if (message) {
+      // Reset height before calculating the new height
+      textarea.style.height = "auto";
+      
+      // Calculate new height but cap it at approximately 10 lines
+      const maxHeight = 200; // approximately 10 lines
+      const scrollHeight = textarea.scrollHeight;
+      
+      textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+    }
   }, [message]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -115,7 +119,7 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
                 placeholder="Ask your question..."
                 className={cn(
                   "w-full flex-1 bg-transparent border-none resize-none text-[14px] font-normal leading-[20px] text-messenger-text-default placeholder:text-messenger-text-muted p-0 min-h-[20px] max-h-[200px]",
-                  message.length > 0 ? "mb-1" : "" // Reduced mb-2 to mb-1 to decrease the gap
+                  message.length > 0 ? "mb-1" : "mb-0" // Ensure no bottom margin when empty
                 )}
                 value={message}
                 onChange={handleInputChange}
@@ -123,6 +127,7 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
                 onBlur={handleInputBlur}
                 onKeyDown={handleKeyDown}
                 style={{
+                  height: message ? 'auto' : '20px', // Force single line height when empty
                   overflowY: textareaRef.current && textareaRef.current.scrollHeight > 200 ? 'auto' : 'hidden',
                   outline: 'none' // Remove the outline when focused
                 }}
