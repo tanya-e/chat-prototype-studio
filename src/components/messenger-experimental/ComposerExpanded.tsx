@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect, KeyboardEvent } from "react";
 import { Smile, Gift, Paperclip, ArrowUp } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -113,7 +114,7 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
                 ref={textareaRef}
                 placeholder="Ask your question..."
                 className={cn(
-                  "w-full flex-1 bg-transparent border-none resize-none focus:outline-none text-[14px] font-normal leading-[20px] text-messenger-text-default placeholder:text-messenger-text-muted p-0 min-h-[20px] max-h-[200px]",
+                  "w-full flex-1 bg-transparent border-none resize-none text-[14px] font-normal leading-[20px] text-messenger-text-default placeholder:text-messenger-text-muted p-0 min-h-[20px] max-h-[200px]",
                   message.length > 0 ? "mb-2" : ""
                 )}
                 value={message}
@@ -122,7 +123,8 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
                 onBlur={handleInputBlur}
                 onKeyDown={handleKeyDown}
                 style={{
-                  overflowY: textareaRef.current && textareaRef.current.scrollHeight > 200 ? 'auto' : 'hidden'
+                  overflowY: textareaRef.current && textareaRef.current.scrollHeight > 200 ? 'auto' : 'hidden',
+                  outline: 'none' // Remove the outline when focused
                 }}
               />
               <div className="flex justify-between items-end w-full">
