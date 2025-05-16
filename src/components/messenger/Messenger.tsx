@@ -12,6 +12,7 @@ import { trackEvent } from "@/utils/analytics";
 import { BrandingFlowType } from "@/types/branding-flows";
 import MessagesView from "./MessagesView";
 import { useConversations } from "@/context/ConversationsContext";
+import TopBannerBranding from "../branding-prototype/TopBannerBranding";
 
 interface MessengerProps {
   onClose?: () => void;
@@ -308,6 +309,9 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
     return <MessagesView onClose={onClose} />;
   }
 
+  // Use Anthropic name for the topBanner flow
+  const aiName = flowType === "topBanner" ? "Anthropic" : "Fin";
+
   return (
     <div className="flex flex-col h-full bg-messenger-base overflow-hidden">
       <MessengerHeader headerState={headerState} onClose={onClose} onBack={handleBackClick} />
@@ -316,6 +320,10 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         ref={messagesContainerRef} 
         className="flex-1 overflow-y-auto p-4"
       >
+        {flowType === "topBanner" && (
+          <TopBannerBranding onUserMessage={userMessageSent} />
+        )}
+
         {interleavedMessages.map((item) => {
           if ((item as any).type === "system-message") {
             return (
@@ -332,7 +340,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         
         {isTyping && (
           <div className="mb-4">
-            <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "Fin" : "Kelly"} />
+            <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? aiName : "Kelly"} />
           </div>
         )}
         

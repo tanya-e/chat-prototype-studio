@@ -2,5 +2,6 @@
 export type BrandingFlowType = 
   | "onFinReply" 
   | "onUserMessage" 
-  | "afterDelay" 
-  | "combo";
+  | "afterDelay"
+  | "combo"
+  | "topBanner";
