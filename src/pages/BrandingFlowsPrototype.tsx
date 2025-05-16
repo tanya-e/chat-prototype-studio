@@ -54,10 +54,25 @@ const BrandingFlowsPrototype: React.FC = () => {
         
         <div className="flex flex-col md:flex-row gap-6">
           <div className="md:w-1/3">
-            <FlowsList 
-              selectedFlow={selectedFlowType} 
-              onFlowSelect={setSelectedFlowType}
-            />
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+              <h2 className="text-lg font-medium mb-4">New Conversation Start</h2>
+              <div className="space-y-2">
+                <button className={`w-full text-left p-3 rounded-md transition-colors ${selectedFlowType === "onUserMessage" ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200" : "hover:bg-gray-100 dark:hover:bg-gray-700"}`} onClick={() => setSelectedFlowType("onUserMessage")}>
+                  <div className="font-medium">On user first message</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Branding disappears when user sends a message</div>
+                </button>
+                
+                <button className={`w-full text-left p-3 rounded-md transition-colors ${selectedFlowType === "afterDelay" ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200" : "hover:bg-gray-100 dark:hover:bg-gray-700"}`} onClick={() => setSelectedFlowType("afterDelay")}>
+                  <div className="font-medium">On Set Delay (after 4 seconds)</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Branding disappears after 4 seconds</div>
+                </button>
+
+                <button className={`w-full text-left p-3 rounded-md transition-colors ${selectedFlowType === "onFinReply" ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200" : "hover:bg-gray-100 dark:hover:bg-gray-700"}`} onClick={() => setSelectedFlowType("onFinReply")}>
+                  <div className="font-medium">On Fin Reply (with stagger)</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Branding fades 300ms after Fin sends a message</div>
+                </button>
+              </div>
+            </div>
           </div>
           
           <div className="md:w-2/3">

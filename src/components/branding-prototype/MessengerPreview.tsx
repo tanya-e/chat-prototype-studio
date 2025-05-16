@@ -5,7 +5,6 @@ import MessageGroup from "../messenger/MessageGroup";
 import TypingIndicator from "../messenger/TypingIndicator";
 import { BrandingFlowType } from "../../types/branding-flows";
 import ComposerWithAnimatedBranding from "./ComposerWithAnimatedBranding";
-import TopBannerBranding from "./TopBannerBranding";
 
 interface MessengerPreviewProps {
   flowType: BrandingFlowType;
@@ -15,7 +14,6 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
   const [isFinMessageVisible, setIsFinMessageVisible] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [userSentMessage, setUserSentMessage] = useState(false);
-  const [staggeredAnimation, setStaggeredAnimation] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Simulate staggered loading and initial Fin message
@@ -24,35 +22,17 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
     setIsFinMessageVisible(false);
     setIsTyping(false);
     setUserSentMessage(false);
-    setStaggeredAnimation(false);
 
-    if (flowType === "topBanner") {
-      // For top banner flow, stagger the animation
+    // Show typing indicator
+    setTimeout(() => {
+      setIsTyping(true);
+      
+      // Show Fin message after typing
       setTimeout(() => {
-        setStaggeredAnimation(true);
-        // Show typing indicator after banner appears
-        setTimeout(() => {
-          setIsTyping(true);
-          
-          // Show Fin message after typing
-          setTimeout(() => {
-            setIsTyping(false);
-            setIsFinMessageVisible(true);
-          }, 1200); // 1.2s typing animation
-        }, 600); // 0.6s delay before typing starts
-      }, 300); // 0.3s delay for initial banner animation
-    } else {
-      // Regular flow for other variants
-      setTimeout(() => {
-        setIsTyping(true);
-        
-        // Show Fin message after typing
-        setTimeout(() => {
-          setIsTyping(false);
-          setIsFinMessageVisible(true);
-        }, 1000); // 1s typing animation
-      }, 200); // 0.2s delay before typing starts
-    }
+        setIsTyping(false);
+        setIsFinMessageVisible(true);
+      }, 1000); // 1s typing animation
+    }, 200); // 0.2s delay before typing starts
   }, [flowType]);
 
   // Scroll to bottom when messages change
@@ -70,21 +50,11 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
     // This is just a preview, so we don't need to do anything
   };
 
-  // Use Anthropic logo and name for the topBanner flow
-  const aiName = flowType === "topBanner" ? "Anthropic" : "Fin";
-  const welcomeMessage = flowType === "topBanner"
-    ? `Hi there, welcome to Intercom 👋 You are now speaking with ${aiName} AI Agent. I can do much more than chatbots you've seen before. Tell me as much as you can about your question and I'll do my best to help you in an instant.`
-    : "Hi there, welcome to Intercom 👋 You are now speaking with Fin AI Agent. I can do much more than chatbots you've seen before. Tell me as much as you can about your question and I'll do my best to help you in an instant.";
-
   return (
     <div className="flex flex-col h-full w-full bg-messenger-base overflow-hidden rounded-lg shadow-md">
       <MessengerHeader headerState="ai" onClose={handleClose} />
       
       <div className="flex-1 overflow-y-auto p-4">
-        {flowType === "topBanner" && (
-          <TopBannerBranding onUserMessage={userSentMessage} />
-        )}
-        
         {isFinMessageVisible && (
           <MessageGroup
             group={{
@@ -94,7 +64,7 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
               messages: [
                 {
                   id: "1-1",
-                  content: welcomeMessage,
+                  content: "Hi there, welcome to Intercom 👋 You are now speaking with Fin AI Agent. I can do much more than chatbots you've seen before. Tell me as much as you can about your question and I'll do my best to help you in an instant.",
                   timestamp: new Date(),
                 },
               ],
@@ -120,7 +90,7 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
         
         {isTyping && (
           <div className="mb-4">
-            <TypingIndicator sender="ai" name={aiName} />
+            <TypingIndicator sender="ai" name="Fin" />
           </div>
         )}
         
