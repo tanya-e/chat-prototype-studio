@@ -5,7 +5,6 @@ import MessageGroup from "../messenger/MessageGroup";
 import TypingIndicator from "../messenger/TypingIndicator";
 import { BrandingFlowType } from "../../types/branding-flows";
 import ComposerWithAnimatedBranding from "./ComposerWithAnimatedBranding";
-import MessageStackBranding from "../messenger/MessageStackBranding";
 
 interface MessengerPreviewProps {
   flowType: BrandingFlowType;
@@ -51,16 +50,11 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
     // This is just a preview, so we don't need to do anything
   };
 
-  // Determine if we should show the composer branding (for all flows except inMessageStack)
-  const showComposerBranding = flowType !== "inMessageStack";
-
   return (
     <div className="flex flex-col h-full w-full bg-messenger-base overflow-hidden rounded-lg shadow-md">
       <MessengerHeader headerState="ai" onClose={handleClose} />
       
       <div className="flex-1 overflow-y-auto p-4">
-        {flowType === "inMessageStack" && <MessageStackBranding userMessageSent={userSentMessage} />}
-        
         {isFinMessageVisible && (
           <MessageGroup
             group={{
@@ -104,21 +98,12 @@ const MessengerPreview: React.FC<MessengerPreviewProps> = ({ flowType }) => {
       </div>
       
       <div className="mt-auto">
-        {showComposerBranding ? (
-          <ComposerWithAnimatedBranding 
-            onSendMessage={handleSendMessage} 
-            flowType={flowType} 
-            finReplied={isFinMessageVisible}
-            userMessageSent={userSentMessage}
-          />
-        ) : (
-          <ComposerWithAnimatedBranding 
-            onSendMessage={handleSendMessage} 
-            flowType="onUserMessage" 
-            finReplied={isFinMessageVisible}
-            userMessageSent={userSentMessage}
-          />
-        )}
+        <ComposerWithAnimatedBranding 
+          onSendMessage={handleSendMessage} 
+          flowType={flowType} 
+          finReplied={isFinMessageVisible}
+          userMessageSent={userSentMessage}
+        />
       </div>
     </div>
   );

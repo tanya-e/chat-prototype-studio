@@ -28,11 +28,6 @@ const FlowsList: React.FC<FlowsListProps> = ({ selectedFlow, onFlowSelect }) => 
       id: "combo" as BrandingFlowType,
       label: "Combo: reply or input",
       description: "Whichever comes first: user sends a message or 4s after Fin's reply"
-    },
-    {
-      id: "inMessageStack" as BrandingFlowType,
-      label: "In message stack",
-      description: "Branding appears at the top of messages and disappears when user sends message"
     }
   ];
 
