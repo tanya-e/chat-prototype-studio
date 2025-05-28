@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { MessageType } from "../messenger/Message";
 import { 
@@ -49,29 +48,37 @@ const MessageBubbleMinimal: React.FC<MessageBubbleMinimalProps> = ({ message }) 
 
   return (
     <div 
-      className={`flex flex-col w-[368px] justify-center ${isUser ? 'items-end' : 'items-start'} mb-[22px]`}
+      className={`flex flex-col w-[368px] justify-center ${isUser ? 'items-end mb-[22px]' : 'items-start mb-[6px]'}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <div className={`max-w-[320px] p-4 flex flex-col items-start gap-2 rounded-[20px] ${isUser ? 'bg-messenger-customer-bg text-messenger-customer-text' : 'bg-[#F5F5F5] text-messenger-text-default'}`}>
         {message.content}
       </div>
-
-      {/* Message details container with negative margin to account for proper spacing */}
-      <div className={`flex px-4 pt-[3px] items-center gap-2 w-full ${isUser ? 'justify-end' : 'justify-start'} h-[16px] -mb-4 relative`}>
-        <div 
-          className={`flex items-center gap-2 absolute ${isUser ? 'right-4' : 'left-4'} transition-opacity duration-200 ease-out ${
-            showDetails 
-              ? 'opacity-100' 
-              : 'opacity-0 pointer-events-none'
-          }`}
+      {/* Metadata for AI and human senders, shown on hover only */}
+      {!isUser && (
+        <div
+          style={{
+            color: "var(--Text-Text-muted-extra, #A3A3A3)",
+            fontFamily: 'SF Pro Text',
+            fontSize: 11,
+            fontStyle: 'normal',
+            fontWeight: 400,
+            lineHeight: 'normal',
+            letterSpacing: '0.072px',
+            marginTop: 4,
+            marginLeft: 16,
+            minHeight: 16, // Reserve space for metadata
+            transition: 'opacity 0.2s',
+            opacity: showDetails ? 1 : 0,
+          }}
+          className="flex gap-2"
         >
-          {/* Only show sender name for non-user messages */}
-          {!isUser && <span className="text-[#A3A3A3] text-[12px] font-normal">{senderName}</span>}
-          {/* Only show timestamp for non-user messages */}
-          {!isUser && <span className="text-[#A3A3A3] text-[12px] font-normal">{formattedTime}</span>}
+          <span>{senderName}</span>
+          <span>•</span>
+          <span>{formattedTime}</span>
         </div>
-      </div>
+      )}
     </div>
   );
 };

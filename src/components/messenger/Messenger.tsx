@@ -4,14 +4,13 @@ import MessageGroup, { MessageGroupType } from "./MessageGroup";
 import TypingIndicator from "./TypingIndicator";
 import SystemMessage from "./SystemMessage";
 import TeamHandover from "./TeamHandover";
-import ComposerWithAnimatedBranding from "../branding-prototype/ComposerWithAnimatedBranding";
-import { Button } from "@/components/ui/button";
-import { RotateCcw } from "lucide-react";
+import ComposerExpanded from "../messenger-experimental/ComposerExpanded";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/utils/analytics";
 import { BrandingFlowType } from "@/types/branding-flows";
 import MessagesView from "./MessagesView";
 import { useConversations } from "@/context/ConversationsContext";
+import MessageBubbleMinimal from "../messenger-experimental/MessageBubbleMinimal";
 
 interface MessengerProps {
   onClose?: () => void;
@@ -326,7 +325,10 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
               />
             );
           } else {
-            return <MessageGroup key={item.id} group={item as MessageGroupType} />;
+            // Render each message in the group as a minimal bubble, including sender
+            return (item as MessageGroupType).messages.map((msg) => (
+              <MessageBubbleMinimal key={msg.id} message={{ ...msg, sender: (item as MessageGroupType).sender }} />
+            ));
           }
         })}
         
@@ -345,12 +347,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         </div>
       )}
       
-      <ComposerWithAnimatedBranding 
-        onSendMessage={handleSendMessage} 
-        flowType={flowType}
-        finReplied={finReplied}
-        userMessageSent={userMessageSent}
-      />
+      <ComposerExpanded onSendMessage={handleSendMessage} />
     </div>
   );
 };

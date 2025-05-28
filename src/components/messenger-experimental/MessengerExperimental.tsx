@@ -9,24 +9,16 @@ import { trackEvent } from "@/utils/analytics";
 import { BrandingFlowType } from "@/types/branding-flows";
 import MessagesView from "../messenger/MessagesView";
 import { useConversations } from "@/context/ConversationsContext";
-
-// Import experimental components
 import NavBarMinimal from "./NavBarMinimal";
 import MessageBubbleMinimal from "./MessageBubbleMinimal";
 import ComposerExpanded from "./ComposerExpanded";
 
-// Import classic components
-import MessengerHeader from "../messenger/MessengerHeader";
-import MessageGroup from "../messenger/MessageGroup";
-import ComposerWithAnimatedBranding from "../branding-prototype/ComposerWithAnimatedBranding";
-
 interface MessengerExperimentalProps {
   onClose?: () => void;
   flowType?: BrandingFlowType;
-  variant: "classic" | "experimental";
 }
 
-// Define system message type
+// Define a separate type for system messages to avoid type conflicts
 interface SystemMessageGroup {
   id: string;
   type: "system";
@@ -51,8 +43,7 @@ const initialMessages: MessageGroupType[] = [
 
 const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({ 
   onClose, 
-  flowType = "onUserMessage",
-  variant = "classic"
+  flowType = "onUserMessage"
 }) => {
   const [messages, setMessages] = useState<MessageGroupType[]>(initialMessages);
   const [systemMessages, setSystemMessages] = useState<SystemMessageGroup[]>([]);
@@ -170,69 +161,24 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
   };
 
   const triggerHumanHandoff = () => {
-    if (!activeConversationId) return;
-    
-    // First show handover pill
     setWaitingForHuman(true);
-    
-    // After 2 seconds, update header state and show system message
-    setTimeout(() => {
-      // Update header state to unassigned first
-      setHeaderState("unassigned");
-      setWaitingForHuman(false);
-      
-      // Add system message for Kelly joining
-      const systemMessageId = `system-${Date.now()}`;
-      const newSystemMessage: SystemMessageGroup = {
-        id: systemMessageId,
+    setIsTyping(false);
+    setSystemMessages((prev) => [
+      ...prev,
+      {
+        id: `sys-${Date.now()}`,
         type: "system",
-        content: "Kelly joined the conversation",
-        displayed: false
-      };
-      
-      setSystemMessages([newSystemMessage]);
-      
-      // Update header state to human
-      setHeaderState("human");
-      updateConversation(activeConversationId, { currentAgent: "human" });
-      
-      // After showing the system message, show typing indicator
-      setTimeout(() => {
-        setIsTyping(true);
-        
-        // Finally show first message from human agent
-        setTimeout(() => {
-          setIsTyping(false);
-          
-          const newHumanMessage: MessageGroupType = {
-            id: `agent-${Date.now()}`,
-            sender: "human",
-            showAvatar: true,
-            messages: [
-              {
-                id: `agent-msg-${Date.now()}`,
-                content: "Hi there! I'm Kelly. What can I help you with today?",
-                timestamp: new Date(),
-              },
-            ],
-          };
-          
-          setMessages((prev) => [...prev, newHumanMessage]);
-          addMessageToConversation(activeConversationId, newHumanMessage);
-          
-        }, 2000); // Show typing for 2 seconds
-      }, 500); // Wait 0.5s after system message before typing
-    }, 2000); // Show handover pill for 2 seconds
+        content: "A human agent will join the conversation soon.",
+        displayed: false,
+      },
+    ]);
   };
 
   const simulateAiResponse = () => {
     if (!activeConversationId) return;
-    
     setIsTyping(true);
-    
     setTimeout(() => {
       setIsTyping(false);
-      
       const newAiMessage: MessageGroupType = {
         id: `ai-${Date.now()}`,
         sender: "ai",
@@ -245,11 +191,8 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
           },
         ],
       };
-      
       setMessages((prev) => [...prev, newAiMessage]);
       addMessageToConversation(activeConversationId, newAiMessage);
-      
-      // Track that Fin has replied for branding flow
       setFinReplied(true);
     }, 1500);
   };
@@ -257,21 +200,13 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
   // Function to interleave messages and system messages for display
   const getInterleavedMessages = () => {
     const result = [...messages];
-    
-    // Insert system messages at the right positions based on their timestamps
     systemMessages.forEach(sysMsg => {
-      // Find the index where the human agent's first message appears
       const humanAgentMessageIndex = result.findIndex(
         msg => msg.sender === "human"
       );
-      
-      // If there's a human agent message, insert system message before it
-      // Otherwise insert at the end
       const insertIndex = humanAgentMessageIndex >= 0 
         ? humanAgentMessageIndex 
         : result.length;
-        
-      // Insert the system message if not already in the result
       if (!sysMsg.displayed) {
         result.splice(insertIndex, 0, {
           id: sysMsg.id,
@@ -280,7 +215,6 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
         } as any);
       }
     });
-    
     return result;
   };
 
@@ -297,99 +231,46 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
 
   return (
     <div className="flex flex-col h-full bg-messenger-base overflow-hidden">
-      {/* Header based on variant */}
-      {variant === "classic" ? (
-        <MessengerHeader headerState={headerState} onClose={onClose} onBack={handleBackClick} />
-      ) : (
-        <NavBarMinimal headerState={headerState} onClose={onClose} onBack={handleBackClick} />
-      )}
-      
+      {/* Only render the experimental header */}
+      <NavBarMinimal headerState={headerState} onClose={onClose} onBack={handleBackClick} />
       {/* Messages section */}
       <div 
         ref={messagesContainerRef} 
-        className={`flex-1 overflow-y-auto p-4 pb-0 ${variant === 'experimental' ? 'pt-[94px]' : 'pt-4'}`}
+        className="flex-1 overflow-y-auto p-4 pb-0 pt-[94px]"
       >
-        {variant === "classic" ? (
-          // Classic message rendering
-          <>
-            {interleavedMessages.map((item) => {
-              if ((item as any).type === "system-message") {
-                return (
-                  <SystemMessage
-                    key={item.id}
-                    message={(item as any).content}
-                    type="human-joined"
-                  />
-                );
-              } else {
-                return <MessageGroup key={item.id} group={item as MessageGroupType} />;
-              }
-            })}
-          </>
-        ) : (
-          // Experimental message rendering with MessageBubbleMinimal
-          <>
-            {interleavedMessages.map((item) => {
-              if ((item as any).type === "system-message") {
-                return (
-                  <SystemMessage
-                    key={item.id}
-                    message={(item as any).content}
-                    type="human-joined"
-                  />
-                );
-              } else {
-                const group = item as MessageGroupType;
-                return (
-                  <div key={group.id} className="flex">
-                    {group.messages.map((msg) => (
-                      <MessageBubbleMinimal 
-                        key={msg.id} 
-                        message={{
-                          id: msg.id,
-                          sender: group.sender,
-                          content: msg.content,
-                          timestamp: msg.timestamp,
-                        }} 
-                      />
-                    ))}
-                  </div>
-                );
-              }
-            })}
-          </>
-        )}
-        
+        {/* Render all messages using MessageBubbleMinimal */}
+        {interleavedMessages.map((item) => {
+          if ((item as any).type === "system-message") {
+            return (
+              <SystemMessage
+                key={item.id}
+                message={(item as any).content}
+                type="human-joined"
+              />
+            );
+          } else {
+            // Render each message in the group as a minimal bubble, including sender
+            return (item as MessageGroupType).messages.map((msg) => (
+              <MessageBubbleMinimal key={msg.id} message={{ ...msg, sender: (item as MessageGroupType).sender }} />
+            ));
+          }
+        })}
         {isTyping && (
-          <div className="mb-5">
+          <div className="mb-4">
             <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "Fin" : "Kelly"} />
           </div>
         )}
-        
         <div ref={messagesEndRef} />
       </div>
-      
       {waitingForHuman && (
         <div className="flex justify-center mb-4 mt-auto px-4">
           <TeamHandover variant={isScrolled ? "fixed" : "default"} />
         </div>
       )}
-      
-      {/* Composer based on variant */}
-      <div className="mt-auto">
-        {variant === "classic" ? (
-          <ComposerWithAnimatedBranding 
-            onSendMessage={handleSendMessage} 
-            flowType={flowType}
-            finReplied={finReplied}
-            userMessageSent={userMessageSent}
-          />
-        ) : (
-          <ComposerExpanded onSendMessage={handleSendMessage} />
-        )}
-      </div>
+      {/* Only render the experimental composer */}
+      <ComposerExpanded onSendMessage={handleSendMessage} />
     </div>
   );
 };
 
-export default MessengerExperimental;
+export default MessengerExperimental; 
