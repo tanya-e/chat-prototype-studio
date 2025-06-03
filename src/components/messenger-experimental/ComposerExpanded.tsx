@@ -1,7 +1,5 @@
-
 import React, { useState, useRef, useEffect, KeyboardEvent } from "react";
-import { Smile, Gift, Paperclip, ArrowUp } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
+import { Smile, Image, Paperclip, ArrowUp } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { trackEvent } from "@/utils/analytics";
 import { cn } from "@/lib/utils";
@@ -25,8 +23,20 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
     const textarea = textareaRef.current;
     if (!textarea) return;
 
-    // Set initial height to match a single line
-    textarea.style.height = "20px"; // Single line height
+    // Force minimum styles with more aggressive approach
+    textarea.style.cssText = `
+      height: 16px !important;
+      min-height: 16px !important;
+      line-height: 16px !important;
+      font-size: 14px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      outline: none !important;
+      background: transparent !important;
+      resize: none !important;
+      overflow-y: hidden !important;
+    `;
     
     if (message) {
       // Reset height before calculating the new height
@@ -37,6 +47,7 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
       const scrollHeight = textarea.scrollHeight;
       
       textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+      textarea.style.overflowY = scrollHeight > maxHeight ? 'auto' : 'hidden';
     }
   }, [message]);
 
@@ -114,31 +125,25 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
             )}
           >
             <div className="flex flex-col w-full">
-              <Textarea
+              <textarea
                 ref={textareaRef}
                 placeholder="Ask your question..."
-                className={cn(
-                  "w-full flex-1 bg-transparent border-none resize-none text-[14px] font-normal leading-[20px] text-messenger-text-default placeholder:text-messenger-text-muted p-0 min-h-[20px] max-h-[200px]",
-                  message.length > 0 ? "mb-1" : "mb-0" // Ensure no bottom margin when empty
-                )}
+                className="w-full bg-transparent border-none resize-none text-[14px] font-normal text-messenger-text-default placeholder:text-messenger-text-muted focus:outline-none"
                 value={message}
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 onKeyDown={handleKeyDown}
-                style={{
-                  height: message ? 'auto' : '20px', // Force single line height when empty
-                  overflowY: textareaRef.current && textareaRef.current.scrollHeight > 200 ? 'auto' : 'hidden',
-                  outline: 'none' // Remove the outline when focused
-                }}
+                rows={1}
               />
-              <div className="flex justify-between items-end w-full mt-1"> {/* Added mt-1 to create a consistent 2px gap */}
-                <div className="flex items-center gap-4 pb-1">
+              
+              <div className="flex justify-between items-end w-full mt-1">
+                <div className="flex items-center gap-4">
                   <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
                     <Smile size={16} />
                   </button>
                   <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
-                    <Gift size={16} />
+                    <Image size={16} />
                   </button>
                   <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
                     <Paperclip size={16} />

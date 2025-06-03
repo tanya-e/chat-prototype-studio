@@ -11,6 +11,8 @@ import { BrandingFlowType } from "@/types/branding-flows";
 import MessagesView from "./MessagesView";
 import { useConversations } from "@/context/ConversationsContext";
 import MessageBubbleMinimal from "../messenger-experimental/MessageBubbleMinimal";
+import { askOpenAI } from "@/utils/openai";
+import gsap from "gsap";
 
 interface MessengerProps {
   onClose?: () => void;
@@ -49,6 +51,8 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   const [isScrolled, setIsScrolled] = useState(false);
   const [userMessageSent, setUserMessageSent] = useState(false);
   const [finReplied, setFinReplied] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [newestMessage, setNewestMessage] = useState<MessageGroupType | null>(null);
   
   const { toast } = useToast();
   
@@ -107,11 +111,6 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
     }
   }, [activeConversationId]);
 
-  // Scroll to bottom when messages change
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, systemMessages, isTyping, waitingForHuman]);
-
   // Track scroll position for handover pill styling
   useEffect(() => {
     const messagesContainer = messagesContainerRef.current;
@@ -120,6 +119,11 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
     const handleScroll = () => {
       const { scrollTop } = messagesContainer;
       setIsScrolled(scrollTop > 10); // Apply fixed styling after scrolling down a bit
+      
+      // Calculate scroll progress (0 to 1)
+      const maxScroll = 200;
+      const progress = Math.min(scrollTop / maxScroll, 1);
+      setScrollProgress(progress);
     };
 
     messagesContainer.addEventListener("scroll", handleScroll);
@@ -129,12 +133,13 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   const handleSendMessage = (text: string) => {
     if (!activeConversationId) return;
     
+    const messageId = `user-msg-${Date.now()}`;
     const newUserMessage: MessageGroupType = {
       id: `user-${Date.now()}`,
       sender: "user",
       messages: [
         {
-          id: `user-msg-${Date.now()}`,
+          id: messageId,
           content: text,
           timestamp: new Date(),
         },
@@ -143,17 +148,74 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
 
     setMessages((prev) => [...prev, newUserMessage]);
     addMessageToConversation(activeConversationId, newUserMessage);
+    setNewestMessage(newUserMessage);
     
     // Track that user has sent a message for the branding flow
     setUserMessageSent(true);
 
-    // Check if the message contains 'human' to trigger handoff
-    if (text.toLowerCase().includes("human")) {
-      triggerHumanHandoff();
-    } else {
-      // Otherwise, simulate AI response
-      simulateAiResponse();
-    }
+    // Animate and scroll
+    setTimeout(() => {
+      if (messagesContainerRef.current) {
+        const container = messagesContainerRef.current;
+        const newMsgElement = container.querySelector(`[data-message-id="${messageId}"]`);
+        
+        if (!newMsgElement) {
+          // Fallback
+          if (text.toLowerCase().includes("human")) {
+            triggerHumanHandoff();
+          } else {
+            simulateAiResponse(text);
+          }
+          return;
+        }
+        
+        // Animate message
+        gsap.fromTo(newMsgElement, 
+          { y: 50, opacity: 0 },
+          { 
+            y: 0, 
+            opacity: 1, 
+            duration: 0.4, 
+            ease: "power2.out",
+            onComplete: () => {
+              // Position message at the very top of the container's viewport
+              const messageEl = newMsgElement as HTMLElement;
+              
+              // Get current positions
+              const containerRect = container.getBoundingClientRect();
+              const messageRect = messageEl.getBoundingClientRect();
+              
+              // Calculate the exact scroll needed
+              // We want message.top to equal container.top + 10px
+              const currentGap = messageRect.top - containerRect.top;
+              const desiredGap = 10;
+              const scrollAdjustment = currentGap - desiredGap;
+              
+              // Check max scrollable position
+              const maxScroll = container.scrollHeight - container.clientHeight;
+              const targetScroll = container.scrollTop + scrollAdjustment;
+              const actualScroll = Math.min(targetScroll, maxScroll);
+              
+              // Animate the scroll with GSAP for smooth movement
+              gsap.to(container, {
+                scrollTop: actualScroll,
+                duration: 0.6,
+                ease: "power2.inOut",
+                onComplete: () => {
+                  // Trigger response after scroll completes
+                  setNewestMessage(null);
+                  if (text.toLowerCase().includes("human")) {
+                    triggerHumanHandoff();
+                  } else {
+                    simulateAiResponse(text);
+                  }
+                }
+              });
+            }
+          }
+        );
+      }
+    }, 100);
   };
 
   const resetConversation = () => {
@@ -237,12 +299,16 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
     }, 2000); // Show handover pill for 2 seconds
   };
 
-  const simulateAiResponse = () => {
+  const simulateAiResponse = async (userText: string) => {
     if (!activeConversationId) return;
     
     setIsTyping(true);
     
-    setTimeout(() => {
+    try {
+      // Call OpenAI API
+      const response = await askOpenAI(userText);
+      const aiContent = response.choices?.[0]?.message?.content || "I'm sorry, I couldn't generate a response.";
+      
       setIsTyping(false);
       
       const newAiMessage: MessageGroupType = {
@@ -252,7 +318,7 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         messages: [
           {
             id: `ai-msg-${Date.now()}`,
-            content: "I understand your question. Let me help you with that. Is there anything specific you'd like to know?",
+            content: aiContent,
             timestamp: new Date(),
           },
         ],
@@ -263,7 +329,27 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
       
       // Track that Fin has replied for branding flow
       setFinReplied(true);
-    }, 1500);
+    } catch (error) {
+      console.error("Error calling OpenAI API:", error);
+      setIsTyping(false);
+      
+      // Show error message
+      const errorMessage: MessageGroupType = {
+        id: `ai-${Date.now()}`,
+        sender: "ai",
+        showAvatar: true,
+        messages: [
+          {
+            id: `ai-msg-${Date.now()}`,
+            content: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment.",
+            timestamp: new Date(),
+          },
+        ],
+      };
+      
+      setMessages((prev) => [...prev, errorMessage]);
+      addMessageToConversation(activeConversationId, errorMessage);
+    }
   };
 
   // Function to interleave messages and system messages for display
@@ -309,11 +395,20 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
 
   return (
     <div className="flex flex-col h-full bg-messenger-base overflow-hidden">
-      <MessengerHeader headerState={headerState} onClose={onClose} onBack={handleBackClick} />
+      <MessengerHeader 
+        headerState={headerState} 
+        onClose={onClose} 
+        onBack={handleBackClick} 
+        scrollProgress={scrollProgress}
+      />
       
       <div 
         ref={messagesContainerRef} 
         className="flex-1 overflow-y-auto p-4"
+        style={{ 
+          paddingTop: scrollProgress > 0 ? `${80 - (scrollProgress * 16)}px` : '20px',
+          paddingBottom: '120px' // Back to normal padding
+        }}
       >
         {interleavedMessages.map((item) => {
           if ((item as any).type === "system-message") {
@@ -326,9 +421,18 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
             );
           } else {
             // Render each message in the group as a minimal bubble, including sender
-            return (item as MessageGroupType).messages.map((msg) => (
-              <MessageBubbleMinimal key={msg.id} message={{ ...msg, sender: (item as MessageGroupType).sender }} />
-            ));
+            return (item as MessageGroupType).messages.map((msg) => {
+              const isNewest = newestMessage?.messages[0]?.id === msg.id;
+              return (
+                <div 
+                  key={msg.id} 
+                  data-message-id={msg.id}
+                  style={{ opacity: isNewest ? 0 : 1 }} // Hide initially if newest
+                >
+                  <MessageBubbleMinimal message={{ ...msg, sender: (item as MessageGroupType).sender }} />
+                </div>
+              );
+            });
           }
         })}
         
@@ -337,6 +441,9 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
             <TypingIndicator sender={headerState === "ai" ? "ai" : "human"} name={headerState === "ai" ? "Fin" : "Kelly"} />
           </div>
         )}
+        
+        {/* Add invisible spacer to ensure scrollability */}
+        <div style={{ height: '60vh' }} />
         
         <div ref={messagesEndRef} />
       </div>
@@ -347,7 +454,9 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         </div>
       )}
       
-      <ComposerExpanded onSendMessage={handleSendMessage} />
+      <div className="flex-shrink-0">
+        <ComposerExpanded onSendMessage={handleSendMessage} />
+      </div>
     </div>
   );
 };
