@@ -7,6 +7,7 @@ import TeamHandover from "./TeamHandover";
 import ComposerExpanded from "../messenger-experimental/ComposerExpanded";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/utils/analytics";
+import { playSystemSound } from "@/utils/sounds";
 import { BrandingFlowType } from "@/types/branding-flows";
 import MessagesView from "./MessagesView";
 import { useConversations } from "@/context/ConversationsContext";
@@ -53,6 +54,8 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
   const [finReplied, setFinReplied] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [newestMessage, setNewestMessage] = useState<MessageGroupType | null>(null);
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
+  const [streamedContent, setStreamedContent] = useState<string>("");
   
   const { toast } = useToast();
   
@@ -132,6 +135,9 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
 
   const handleSendMessage = (text: string) => {
     if (!activeConversationId) return;
+    
+    // Play sound for message sent
+    playSystemSound('message_sent');
     
     const messageId = `user-msg-${Date.now()}`;
     const newUserMessage: MessageGroupType = {
@@ -311,21 +317,83 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
       
       setIsTyping(false);
       
+      // Play sound for AI streaming start
+      playSystemSound('ai_start_streaming');
+      
+      // Create the AI message structure
+      const messageId = `ai-msg-${Date.now()}`;
       const newAiMessage: MessageGroupType = {
         id: `ai-${Date.now()}`,
         sender: "ai",
         showAvatar: true,
         messages: [
           {
-            id: `ai-msg-${Date.now()}`,
-            content: aiContent,
+            id: messageId,
+            content: "", // Start with empty content
             timestamp: new Date(),
           },
         ],
       };
       
+      // Add the empty message to start streaming
       setMessages((prev) => [...prev, newAiMessage]);
       addMessageToConversation(activeConversationId, newAiMessage);
+      
+      // Start streaming simulation
+      setStreamingMessageId(messageId);
+      
+      // Split response into words for streaming
+      const words = aiContent.split(' ');
+      let currentContent = "";
+      
+      // Stream words with delay
+      for (let i = 0; i < words.length; i++) {
+        currentContent += (i > 0 ? ' ' : '') + words[i];
+        setStreamedContent(currentContent);
+        
+        // Wait between words (simulate streaming) - faster timing
+        await new Promise(resolve => setTimeout(resolve, 40 + Math.random() * 40)); // 40-80ms per word (was 80-120ms)
+      }
+      
+      // Finish streaming - update the actual message content
+      setTimeout(() => {
+        // Play sound for AI streaming completion
+        playSystemSound('ai_finish_streaming');
+        
+        setMessages((prev) => 
+          prev.map(messageGroup => 
+            messageGroup.id === newAiMessage.id 
+              ? {
+                  ...messageGroup,
+                  messages: messageGroup.messages.map(msg => 
+                    msg.id === messageId 
+                      ? { ...msg, content: aiContent }
+                      : msg
+                  )
+                }
+              : messageGroup
+          )
+        );
+        
+        // Update conversation with final content
+        updateConversation(activeConversationId, {
+          messages: getConversation(activeConversationId)?.messages.map(messageGroup => 
+            messageGroup.id === newAiMessage.id 
+              ? {
+                  ...messageGroup,
+                  messages: messageGroup.messages.map(msg => 
+                    msg.id === messageId 
+                      ? { ...msg, content: aiContent }
+                      : msg
+                  )
+                }
+              : messageGroup
+          ) || []
+        });
+        
+        setStreamingMessageId(null);
+        setStreamedContent("");
+      }, 500); // Brief pause before finalizing
       
       // Track that Fin has replied for branding flow
       setFinReplied(true);
@@ -400,11 +468,12 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         onClose={onClose} 
         onBack={handleBackClick} 
         scrollProgress={scrollProgress}
+        userMessageSent={userMessageSent}
       />
       
       <div 
         ref={messagesContainerRef} 
-        className="flex-1 overflow-y-auto p-4"
+        className="flex-1 overflow-y-auto px-[20px]"
         style={{ 
           paddingTop: scrollProgress > 0 ? `${80 - (scrollProgress * 16)}px` : '20px',
           paddingBottom: '120px' // Back to normal padding
@@ -423,13 +492,19 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
             // Render each message in the group as a minimal bubble, including sender
             return (item as MessageGroupType).messages.map((msg) => {
               const isNewest = newestMessage?.messages[0]?.id === msg.id;
+              const isStreamingMessage = streamingMessageId === msg.id;
+              
               return (
                 <div 
                   key={msg.id} 
                   data-message-id={msg.id}
                   style={{ opacity: isNewest ? 0 : 1 }} // Hide initially if newest
                 >
-                  <MessageBubbleMinimal message={{ ...msg, sender: (item as MessageGroupType).sender }} />
+                  <MessageBubbleMinimal 
+                    message={{ ...msg, sender: (item as MessageGroupType).sender }} 
+                    isStreaming={isStreamingMessage}
+                    streamedContent={isStreamingMessage ? streamedContent : undefined}
+                  />
                 </div>
               );
             });

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowLeft, MoreHorizontal, ChevronLeft, X } from "lucide-react";
 import { AIAvatar, HumanAvatar, UnassignedAvatars } from "../icons/MessengerIcons";
 import { trackEvent } from "@/utils/analytics";
@@ -12,6 +12,7 @@ interface MessengerHeaderProps {
   onBack?: () => void;
   subtitle?: string;
   scrollProgress?: number; // 0 to 1, where 0 is no scroll and 1 is fully scrolled
+  userMessageSent?: boolean; // Track if user has sent first message
 }
 
 const MessengerHeader: React.FC<MessengerHeaderProps> = ({ 
@@ -19,31 +20,38 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({
   onClose, 
   onBack, 
   subtitle,
-  scrollProgress = 0 
+  scrollProgress = 0,
+  userMessageSent = false
 }) => {
   const headerRef = useRef<HTMLDivElement>(null);
   const avatarRef = useRef<HTMLDivElement>(null);
   const backButtonRef = useRef<HTMLButtonElement>(null);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (!headerRef.current || !avatarRef.current) return;
 
-    // Calculate values based on scroll progress
-    const avatarScale = 1 - (scrollProgress * 0.375); // 32px to 20px (20/32 = 0.625, so scale by 0.625)
-    const borderRadiusScale = headerState === "ai" ? 
-      8 - (scrollProgress * 4) : // For AI: 8px to 4px border radius
-      999; // Human stays circular
+    // Determine if header should be scaled down
+    // Scale down if user sent message AND not hovered
+    const shouldScaleDown = userMessageSent && !isHovered;
     
-    const headerPadding = 16 - (scrollProgress * 8); // 16px to 8px padding
-    const buttonScale = 1 - (scrollProgress * 0.158); // 38px to 32px (32/38 = 0.842)
+    // Calculate scale values with natural transitions
+    const avatarScale = shouldScaleDown ? 0.625 : 1; // 32px to 20px when scaled down
+    const headerHeight = shouldScaleDown ? 48 : 64; // Smaller header when scaled down
+    const headerPadding = shouldScaleDown ? 8 : 16; // Less padding when scaled down
+    const buttonScale = shouldScaleDown ? 0.842 : 1; // 38px to 32px when scaled down
 
-    // Apply animations with GSAP
+    // Border radius for AI avatar
+    const borderRadius = headerState === "ai" ? 
+      (shouldScaleDown ? 4 : 8) : 999; // More rounded when scaled down
+
+    // Apply animations with natural easing
     gsap.to(avatarRef.current, {
       scale: avatarScale,
-      duration: 0.3,
-      ease: "power2.out"
+      duration: 0.4,
+      ease: "power2.inOut"
     });
 
     // Animate border radius for AI avatar
@@ -51,9 +59,9 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({
       const avatarElement = avatarRef.current.querySelector('div');
       if (avatarElement) {
         gsap.to(avatarElement, {
-          borderRadius: `${borderRadiusScale}px`,
-          duration: 0.3,
-          ease: "power2.out"
+          borderRadius: `${borderRadius}px`,
+          duration: 0.4,
+          ease: "power2.inOut"
         });
       }
     }
@@ -61,10 +69,9 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({
     gsap.to(headerRef.current, {
       paddingTop: `${headerPadding}px`,
       paddingBottom: `${headerPadding}px`,
-      height: `${64 - (scrollProgress * 16)}px`, // 64px to 48px
-      borderBottomColor: `rgba(235, 235, 235, ${1 - (scrollProgress * 0.5)})`, // Fade border
-      duration: 0.3,
-      ease: "power2.out"
+      height: `${headerHeight}px`,
+      duration: 0.4,
+      ease: "power2.inOut"
     });
 
     // Animate buttons
@@ -73,13 +80,13 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({
       if (button) {
         gsap.to(button, {
           scale: buttonScale,
-          duration: 0.3,
-          ease: "power2.out"
+          duration: 0.4,
+          ease: "power2.inOut"
         });
       }
     });
 
-  }, [scrollProgress, headerState]);
+  }, [scrollProgress, headerState, userMessageSent, isHovered]);
 
   const handleClose = () => {
     if (onClose) {
@@ -98,8 +105,10 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({
   return (
     <div 
       ref={headerRef}
-      className="relative flex items-center justify-between px-2 border-b border-messenger-border"
+      className="relative flex items-center justify-between px-2 backdrop-blur-md bg-white/80 dark:bg-gray-900/80"
       style={{ height: '64px' }} // Initial height
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Left side - Back button */}
       <div className="flex items-center">

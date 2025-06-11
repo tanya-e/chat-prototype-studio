@@ -1,0 +1,122 @@
+/* Markdown styles for messenger */
+
+.message-markdown {
+  line-height: 1.5;
+}
+
+.message-markdown h1,
+.message-markdown h2,
+.message-markdown h3,
+.message-markdown h4,
+.message-markdown h5,
+.message-markdown h6 {
+  margin: 8px 0 4px 0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.message-markdown h1 {
+  font-size: 1.125em;
+}
+
+.message-markdown h2 {
+  font-size: 1.1em;
+}
+
+.message-markdown h3,
+.message-markdown h4,
+.message-markdown h5,
+.message-markdown h6 {
+  font-size: 1em;
+}
+
+.message-markdown p {
+  margin: 0 0 8px 0;
+}
+
+.message-markdown p:last-child {
+  margin-bottom: 0;
+}
+
+.message-markdown ul,
+.message-markdown ol {
+  margin: 4px 0 8px 0;
+  padding-left: 20px;
+}
+
+.message-markdown li {
+  margin: 2px 0;
+}
+
+.message-markdown ul li {
+  list-style-type: disc;
+}
+
+.message-markdown ol li {
+  list-style-type: decimal;
+}
+
+.message-markdown strong {
+  font-weight: 600;
+}
+
+.message-markdown em {
+  font-style: italic;
+}
+
+.message-markdown code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.message-markdown pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 8px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.message-markdown pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.message-markdown blockquote {
+  border-left: 3px solid rgba(0, 0, 0, 0.1);
+  margin: 8px 0;
+  padding-left: 12px;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.message-markdown a {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.message-markdown a:hover {
+  color: #0052a3;
+}
+
+/* Adjust for user messages (white background) */
+.message-user .message-markdown code {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.message-user .message-markdown pre {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.message-user .message-markdown blockquote {
+  border-left-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.message-user .message-markdown a {
+  color: #66b3ff;
+} 

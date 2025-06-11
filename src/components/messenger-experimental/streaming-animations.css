@@ -1,0 +1,68 @@
+/* Streaming animations for AI messages */
+
+@keyframes fadeInWord {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: var(--target-opacity, 1);
+  }
+}
+
+@keyframes bubbleGrowth {
+  from {
+    transform: scale(0.85);
+    opacity: 0.3;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.streaming-text {
+  position: relative;
+}
+
+.streaming-word {
+  display: inline;
+  opacity: 0;
+  animation: fadeInWord 300ms ease-out forwards;
+  animation-fill-mode: forwards;
+}
+
+.streaming-bubble {
+  animation: bubbleGrowth 200ms ease-out forwards;
+  transform-origin: bottom left;
+}
+
+.streaming-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background-color: currentColor;
+  margin-left: 4px;
+  opacity: 1;
+  animation: blink 1s infinite;
+  vertical-align: baseline;
+} 
