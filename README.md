@@ -1,4 +1,8 @@
-# Welcome to your Lovable project
+# Chat Prototype Studio
+
+<!-- Deployed with OpenAI integration -->
+
+A modern messenger interface prototype built with React, TypeScript, and cutting-edge UI components.
 
 ## Project info
 
