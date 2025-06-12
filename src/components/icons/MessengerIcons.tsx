@@ -1,15 +1,15 @@
-
 import React from "react";
 import { ArrowLeft, MoreHorizontal, X, Paperclip, Send, Mic, UserRound } from "lucide-react";
+import FinNewLogo from "../../assets/visuals/Fin-New.svg";
 
 export { ArrowLeft, MoreHorizontal, X, Paperclip, Send, Mic, UserRound };
 
 export const AIAvatar = () => (
   <div className="flex items-center justify-center w-8 h-8 overflow-hidden rounded-md">
     <img 
-      src="/lovable-uploads/266386fe-9896-4d94-adcb-411ea69f8cb7.png" 
+      src={FinNewLogo} 
       alt="Fin AI Avatar" 
-      className="w-full h-full object-cover"
+      className="w-full h-full object-contain"
     />
   </div>
 );
@@ -35,9 +35,9 @@ export const UnassignedAvatars = () => (
 export const SmallAIAvatar = () => (
   <div className="flex items-center justify-center w-5 h-5 overflow-hidden rounded-md">
     <img 
-      src="/lovable-uploads/266386fe-9896-4d94-adcb-411ea69f8cb7.png" 
+      src={FinNewLogo} 
       alt="Fin AI Avatar" 
-      className="w-full h-full object-cover"
+      className="w-full h-full object-contain"
     />
   </div>
 );
