@@ -1,6 +1,7 @@
 
 import React, { useState, FormEvent, useEffect } from "react";
-import { ArrowUp, Smile, Paperclip, Image } from "lucide-react";
+import { ArrowUp } from "lucide-react";
+import { SmileIcon, GifIcon, AttachmentIcon } from "../icons/MessengerIcons";
 import { trackEvent } from "@/utils/analytics";
 
 interface MessageComposerProps {
@@ -101,17 +102,17 @@ const MessageComposer: React.FC<MessageComposerProps> = ({
             />
             
             <div className="flex items-center justify-end gap-4">
-              <button type="button" className="p-1 text-messenger-icon-muted hover:text-messenger-text-default">
-                <Smile size={16} />
+              <button type="button" className="p-1 text-messenger-text-muted-extra hover:text-messenger-text-default">
+                <SmileIcon />
               </button>
-              
+
               {!hasText && <>
-                  <button type="button" className="p-1 text-messenger-icon-muted hover:text-messenger-text-default">
-                    <Image size={16} />
+                  <button type="button" className="p-1 text-messenger-text-muted-extra hover:text-messenger-text-default">
+                    <GifIcon />
                   </button>
-                  
-                  <button type="button" className="p-1 text-messenger-icon-muted hover:text-messenger-text-default">
-                    <Paperclip size={16} />
+
+                  <button type="button" className="p-1 text-messenger-text-muted-extra hover:text-messenger-text-default">
+                    <AttachmentIcon />
                   </button>
                 </>}
               

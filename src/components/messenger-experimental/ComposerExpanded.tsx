@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, KeyboardEvent } from "react";
-import { Smile, Image, Paperclip, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
+import { SmileIcon, GifIcon, AttachmentIcon } from "../icons/MessengerIcons";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { trackEvent } from "@/utils/analytics";
 import { cn } from "@/lib/utils";
@@ -112,52 +113,77 @@ const ComposerExpanded: React.FC<ComposerExpandedProps> = ({
   
   return (
     <div className="w-full mb-0 relative">
-      <div className="w-full absolute bottom-0 left-0 right-0 composer-gradient">
-        <form onSubmit={handleSubmit} className="w-full py-[16px]">
-          <div 
-            ref={containerRef}
-            onClick={handleContainerClick}
-            className={cn(
-              "w-[360px] mx-auto px-[14px] py-[12px] pr-[8px] flex flex-col justify-between rounded-[22px] border bg-white shadow-[0px_0px_4px_0px_rgba(15,15,15,0.16)] transition-colors",
-              isFocused 
-                ? "border-messenger-composer-border" 
-                : "border-[#F5F5F5]"
-            )}
-          >
-            <div className="flex flex-col w-full">
-              <textarea
-                ref={textareaRef}
-                placeholder="Ask your question..."
-                className="w-full bg-transparent border-none resize-none text-[14px] font-normal text-messenger-text-default placeholder:text-messenger-text-muted focus:outline-none"
-                value={message}
-                onChange={handleInputChange}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                onKeyDown={handleKeyDown}
-                rows={1}
-              />
-              
-              <div className="flex justify-between items-end w-full mt-1">
-                <div className="flex items-center gap-4">
-                  <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
-                    <Smile size={16} />
-                  </button>
-                  <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
-                    <Image size={16} />
-                  </button>
-                  <button type="button" className="text-messenger-icon-muted hover:text-messenger-text-default">
-                    <Paperclip size={16} />
-                  </button>
-                </div>
-                <div className="flex items-center">
-                  <button type={hasText ? "submit" : "button"} disabled={!hasText} className={`w-8 h-8 rounded-full flex items-center justify-center ${hasText ? 'bg-messenger-customer-bg' : 'bg-[#F5F5F5]'}`}>
-                    <ArrowUp size={16} className={hasText ? 'text-messenger-customer-text' : 'text-messenger-icon-muted'} />
+      {/* Gradient background matching Figma */}
+      <div className="w-full absolute bottom-0 left-0 right-0 composer-gradient h-[101px]">
+        <div className="flex flex-col justify-end items-center h-full py-4 px-4">
+          {/* Main composer container */}
+          <form onSubmit={handleSubmit} className="w-full max-w-[360px]">
+            <div
+              ref={containerRef}
+              onClick={handleContainerClick}
+              className={cn(
+                "w-full flex flex-col justify-between rounded-[22px] border-[1.5px] bg-messenger-input-base shadow-[0px_0px_4px_0px_rgba(15,15,15,0.16)] transition-colors",
+                isFocused
+                  ? "border-messenger-composer-border"
+                  : "border-messenger-border"
+              )}
+              style={{
+                paddingTop: '11px',
+                paddingRight: '8px',
+                paddingBottom: '8px',
+                paddingLeft: '16px'
+              }}
+            >
+              <div className="flex flex-col w-full gap-0.5">
+                <textarea
+                  ref={textareaRef}
+                  placeholder="Ask your question..."
+                  className="w-full bg-transparent border-none resize-none text-[14px] font-normal text-messenger-text-default placeholder:text-messenger-text-muted focus:outline-none"
+                  style={{
+                    fontFamily: 'SF Pro Text', // Same as message bubbles
+                    fontSize: '14px', // Same as message bubbles
+                    fontWeight: 400, // Same as message bubbles
+                    lineHeight: '1.5em' // Same as message bubbles (21px at 14px font)
+                  }}
+                  value={message}
+                  onChange={handleInputChange}
+                  onFocus={handleInputFocus}
+                  onBlur={handleInputBlur}
+                  onKeyDown={handleKeyDown}
+                  rows={1}
+                />
+
+                <div className="flex justify-between items-end w-full" style={{ gap: '28px' }}>
+                  <div className="flex items-center gap-4 pb-0.5">
+                    <button type="button" className="text-messenger-text-muted-extra hover:text-messenger-text-default transition-colors">
+                      <SmileIcon />
+                    </button>
+                    <button type="button" className="text-messenger-text-muted-extra hover:text-messenger-text-default transition-colors">
+                      <GifIcon />
+                    </button>
+                    <button type="button" className="text-messenger-text-muted-extra hover:text-messenger-text-default transition-colors">
+                      <AttachmentIcon />
+                    </button>
+                  </div>
+
+                  {/* Send button inside composer like in Figma */}
+                  <button
+                    type={hasText ? "submit" : "button"}
+                    disabled={!hasText}
+                    className={cn(
+                      "w-8 h-8 rounded-full flex items-center justify-center transition-colors flex-shrink-0",
+                      hasText
+                        ? 'bg-messenger-customer-bg hover:bg-messenger-customer-bg/90'
+                        : 'bg-messenger-send-button-disabled'
+                    )}
+                  >
+                    <ArrowUp size={16} className={hasText ? 'text-messenger-customer-text' : 'text-messenger-send-button-disabled-text'} />
                   </button>
                 </div>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

@@ -8,11 +8,13 @@ interface NavBarMinimalProps {
   headerState: HeaderStateType;
   onClose?: () => void;
   onBack?: () => void;
+  onMoreClick?: () => void;
 }
 const NavBarMinimal: React.FC<NavBarMinimalProps> = ({
   headerState,
   onClose,
-  onBack
+  onBack,
+  onMoreClick
 }) => {
   const handleClose = () => {
     if (onClose) {
@@ -26,10 +28,17 @@ const NavBarMinimal: React.FC<NavBarMinimalProps> = ({
       onBack();
     }
   };
+
+  const handleMoreClick = () => {
+    if (onMoreClick) {
+      trackEvent("messenger_more_clicked");
+      onMoreClick();
+    }
+  };
   return <div className="absolute top-0 left-0 right-0 flex w-full px-4 justify-between items-center nav-gradient z-10 py-[8px]">
       {/* Back button */}
       <button className="flex p-2 items-center gap-2 rounded-full bg-white/80 shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)] dark:bg-gray-800/80" onClick={handleBack}>
-        <ChevronLeft size={20} className="text-messenger-icon-muted" />
+        <ChevronLeft size={20} className="text-messenger-text-muted-extra" />
       </button>
 
       {/* Center avatar - using absolute positioning for true center */}
@@ -46,11 +55,14 @@ const NavBarMinimal: React.FC<NavBarMinimalProps> = ({
 
       {/* Right actions */}
       <div className="flex items-center gap-2">
-        <button className="flex p-2 items-center gap-2 rounded-full bg-white/80 shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)] dark:bg-gray-800/80">
-          <MoreHorizontal size={20} className="text-messenger-icon-muted" />
+        <button
+          className="flex p-2 items-center gap-2 rounded-full bg-white/80 shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)] dark:bg-gray-800/80"
+          onClick={handleMoreClick}
+        >
+          <MoreHorizontal size={20} className="text-messenger-text-muted-extra" />
         </button>
         {onClose && <button className="flex p-2 items-center gap-2 rounded-full bg-white/80 shadow-[0px_1px_2px_0px_rgba(15,15,15,0.06)] dark:bg-gray-800/80" onClick={handleClose}>
-            <X size={20} className="text-messenger-icon-muted" />
+            <X size={20} className="text-messenger-text-muted-extra" />
           </button>}
       </div>
     </div>;

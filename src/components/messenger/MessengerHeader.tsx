@@ -103,25 +103,25 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({
   };
 
   return (
-    <div 
+    <div
       ref={headerRef}
-      className="relative flex items-center justify-between px-2 backdrop-blur-md bg-white/80 dark:bg-gray-900/80"
-      style={{ height: '64px' }} // Initial height
+      className="relative flex items-center justify-between px-3 backdrop-blur-[20px] bg-gradient-to-b from-transparent to-messenger-base"
+      style={{ height: '64px' }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Left side - Back button */}
       <div className="flex items-center">
         {onBack && (
-          <button 
+          <button
             ref={backButtonRef}
-            className="relative flex items-center justify-center min-w-[38px] min-h-[38px] w-[38px] h-[38px] text-messenger-icon-muted hover:text-messenger-text-default hover:bg-messenger-ai-bg rounded-lg transition-colors before:absolute before:inset-0 before:content-['']"
+            className="relative flex items-center justify-center min-w-[36px] min-h-[36px] w-[36px] h-[36px] text-messenger-text-muted hover:text-messenger-text-default hover:bg-messenger-ai-bg rounded-full transition-colors"
             onClick={handleBack}
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={12} />
           </button>
         )}
-        {!onBack && <div className="w-[38px]" />} {/* Spacer when no back button */}
+        {!onBack && <div className="w-[36px]" />} {/* Spacer when no back button */}
       </div>
       
       {/* Center - Avatar (absolutely positioned) */}
@@ -140,20 +140,20 @@ const MessengerHeader: React.FC<MessengerHeaderProps> = ({
       </div>
       
       {/* Right side - Action buttons */}
-      <div className="flex items-center gap-1">
-        <button 
+      <div className="flex items-center gap-0.5">
+        <button
           ref={moreButtonRef}
-          className="relative flex items-center justify-center min-w-[38px] min-h-[38px] w-[38px] h-[38px] text-messenger-icon-muted hover:text-messenger-text-default hover:bg-messenger-ai-bg rounded-lg transition-colors before:absolute before:inset-0 before:content-['']"
+          className="relative flex items-center justify-center min-w-[36px] min-h-[36px] w-[36px] h-[36px] text-messenger-icon-muted hover:text-messenger-text-default hover:bg-messenger-ai-bg rounded-full transition-colors"
         >
           <MoreHorizontal size={16} />
         </button>
         {onClose && (
-          <button 
+          <button
             ref={closeButtonRef}
-            className="relative flex items-center justify-center min-w-[38px] min-h-[38px] w-[38px] h-[38px] text-messenger-icon-muted hover:text-messenger-text-default hover:bg-messenger-ai-bg rounded-lg transition-colors before:absolute before:inset-0 before:content-['']"
+            className="relative flex items-center justify-center min-w-[36px] min-h-[36px] w-[36px] h-[36px] text-messenger-text-muted-extra hover:text-messenger-text-default hover:bg-messenger-ai-bg rounded-full transition-colors"
             onClick={handleClose}
           >
-            <X size={16} />
+            <X size={12.8} />
           </button>
         )}
       </div>

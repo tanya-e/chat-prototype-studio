@@ -68,6 +68,7 @@ export default {
           elevated: 'var(--messenger-elevated)',
           'text-default': 'var(--messenger-text-default)',
           'text-muted': 'var(--messenger-text-muted)',
+          'text-muted-extra': 'var(--messenger-text-muted-extra)',
           'icon-muted': 'var(--messenger-icon-muted)',
           'customer-bg': 'var(--messenger-customer-bg)',
           'customer-text': 'var(--messenger-customer-text)',
@@ -76,6 +77,8 @@ export default {
           'composer-bg': 'var(--messenger-composer-bg)',
           'composer-border': 'var(--messenger-composer-border)',
           'input-base': 'var(--messenger-input-base)',
+          'send-button-disabled': 'var(--messenger-send-button-disabled)',
+          'send-button-disabled-text': 'var(--messenger-send-button-disabled-text)',
         }
       },
       borderRadius: {
@@ -102,27 +105,27 @@ export default {
           '100%': { opacity: '1' }
         },
         'messenger-open': {
-          '0%': { 
-            opacity: '0', 
+          '0%': {
+            opacity: '0',
             transform: 'scale(0.5) translateY(20px)',
-            borderRadius: '1rem'
+            borderRadius: '34px'
           },
-          '100%': { 
-            opacity: '1', 
+          '100%': {
+            opacity: '1',
             transform: 'scale(1) translateY(0)',
-            borderRadius: '1rem'
+            borderRadius: '34px'
           }
         },
         'messenger-close': {
-          '0%': { 
-            opacity: '1', 
+          '0%': {
+            opacity: '1',
             transform: 'scale(1) translateY(0)',
-            borderRadius: '1rem' 
+            borderRadius: '34px'
           },
-          '100%': { 
-            opacity: '0', 
+          '100%': {
+            opacity: '0',
             transform: 'scale(0.5) translateY(20px)',
-            borderRadius: '1rem' 
+            borderRadius: '34px'
           }
         }
       },

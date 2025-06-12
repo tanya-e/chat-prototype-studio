@@ -471,12 +471,12 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
         userMessageSent={userMessageSent}
       />
       
-      <div 
-        ref={messagesContainerRef} 
-        className="flex-1 overflow-y-auto px-[20px]"
-        style={{ 
-          paddingTop: scrollProgress > 0 ? `${80 - (scrollProgress * 16)}px` : '20px',
-          paddingBottom: '120px' // Back to normal padding
+      <div
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto px-4"
+        style={{
+          paddingTop: '16px',
+          paddingBottom: '120px'
         }}
       >
         {interleavedMessages.map((item) => {
@@ -490,20 +490,25 @@ const Messenger: React.FC<MessengerProps> = ({ onClose, flowType = "onUserMessag
             );
           } else {
             // Render each message in the group as a minimal bubble, including sender
-            return (item as MessageGroupType).messages.map((msg) => {
+            return (item as MessageGroupType).messages.map((msg, msgIndex, msgArray) => {
               const isNewest = newestMessage?.messages[0]?.id === msg.id;
               const isStreamingMessage = streamingMessageId === msg.id;
-              
+
+              // Check if this is the last message in the entire conversation
+              const isLastMessage = item === interleavedMessages[interleavedMessages.length - 1] &&
+                                   msgIndex === msgArray.length - 1;
+
               return (
-                <div 
-                  key={msg.id} 
+                <div
+                  key={msg.id}
                   data-message-id={msg.id}
                   style={{ opacity: isNewest ? 0 : 1 }} // Hide initially if newest
                 >
-                  <MessageBubbleMinimal 
-                    message={{ ...msg, sender: (item as MessageGroupType).sender }} 
+                  <MessageBubbleMinimal
+                    message={{ ...msg, sender: (item as MessageGroupType).sender }}
                     isStreaming={isStreamingMessage}
                     streamedContent={isStreamingMessage ? streamedContent : undefined}
+                    isLastMessage={isLastMessage}
                   />
                 </div>
               );

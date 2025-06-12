@@ -12,6 +12,7 @@ import { useConversations } from "@/context/ConversationsContext";
 import NavBarMinimal from "./NavBarMinimal";
 import MessageBubbleMinimal from "./MessageBubbleMinimal";
 import ComposerExpanded from "./ComposerExpanded";
+import BottomDrawer from "./BottomDrawer";
 
 interface MessengerExperimentalProps {
   onClose?: () => void;
@@ -53,6 +54,7 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [userMessageSent, setUserMessageSent] = useState(false);
   const [finReplied, setFinReplied] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   
   const { toast } = useToast();
   
@@ -222,6 +224,48 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
     setActiveConversation(null);
   };
 
+  const handleMoreClick = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setIsDrawerOpen(false);
+  };
+
+  const handleDownloadTranscript = () => {
+    // Create a simple text transcript
+    const transcript = messages
+      .map(group =>
+        group.messages.map(msg =>
+          `${group.sender === 'ai' ? 'Fin' : group.sender === 'user' ? 'You' : 'Agent'}: ${msg.content}`
+        ).join('\n')
+      )
+      .join('\n\n');
+
+    // Create and download the file
+    const blob = new Blob([transcript], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `conversation-transcript-${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    trackEvent("transcript_downloaded");
+  };
+
+  const handleExpandMessenger = () => {
+    // This could open the messenger in a new window or expand it
+    // For now, we'll just track the event and show a toast
+    trackEvent("messenger_expand_requested");
+    toast({
+      title: "Expand Messenger",
+      description: "This feature will open the messenger in a larger view.",
+    });
+  };
+
   const interleavedMessages = getInterleavedMessages();
 
   // If no active conversation is selected, show the messages view
@@ -232,7 +276,12 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
   return (
     <div className="flex flex-col h-full bg-messenger-base overflow-hidden">
       {/* Only render the experimental header */}
-      <NavBarMinimal headerState={headerState} onClose={onClose} onBack={handleBackClick} />
+      <NavBarMinimal
+        headerState={headerState}
+        onClose={onClose}
+        onBack={handleBackClick}
+        onMoreClick={handleMoreClick}
+      />
       {/* Messages section */}
       <div 
         ref={messagesContainerRef} 
@@ -250,9 +299,19 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
             );
           } else {
             // Render each message in the group as a minimal bubble, including sender
-            return (item as MessageGroupType).messages.map((msg) => (
-              <MessageBubbleMinimal key={msg.id} message={{ ...msg, sender: (item as MessageGroupType).sender }} />
-            ));
+            return (item as MessageGroupType).messages.map((msg, msgIndex, msgArray) => {
+              // Check if this is the last message in the entire conversation
+              const isLastMessage = item === interleavedMessages[interleavedMessages.length - 1] &&
+                                   msgIndex === msgArray.length - 1;
+
+              return (
+                <MessageBubbleMinimal
+                  key={msg.id}
+                  message={{ ...msg, sender: (item as MessageGroupType).sender }}
+                  isLastMessage={isLastMessage}
+                />
+              );
+            });
           }
         })}
         {isTyping && (
@@ -269,6 +328,14 @@ const MessengerExperimental: React.FC<MessengerExperimentalProps> = ({
       )}
       {/* Only render the experimental composer */}
       <ComposerExpanded onSendMessage={handleSendMessage} />
+
+      {/* Bottom Drawer */}
+      <BottomDrawer
+        isOpen={isDrawerOpen}
+        onClose={handleDrawerClose}
+        onDownloadTranscript={handleDownloadTranscript}
+        onExpandMessenger={handleExpandMessenger}
+      />
     </div>
   );
 };
